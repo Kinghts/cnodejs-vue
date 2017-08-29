@@ -23,7 +23,7 @@
       }
     },
     mounted () {
-      // this.getUserInfo(['2d4803b7-cefd-453f-a5f9-30a60ce1196b'])
+      this.getTopics([this, '/home/all'])
     },
     computed: {
       ...mapState({

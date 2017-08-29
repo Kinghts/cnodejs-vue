@@ -20,24 +20,22 @@ export default {
     }
   },
   mounted () {
-    if (this.isLogin) { // 用户已登录，但是刷新了页面
-      this.autoLogin()
+    if (localStorage.accesstoken) { // 用户以前登陆过
+      if (!this.$store.state.user.id) { // 用户当前并未登录
+        this.autoLogin()
+      }
     }
-    this.getTopics([this, '/home/all'])
-    // 刷新后，不同页面的应该有单独的处理方法
-    console.log(this.$store.state.route)
+    this.$router.push('/home')
   },
   computed: {
     ...mapState({
       routeName: state => state.route.name,
       isShowTransit: state => state.ui.isShowTransit
-    }),
-    isLogin: () => Boolean(localStorage.accesstoken)
+    })
   },
   methods: {
     ...mapActions({
       login: 'user/login',
-      getTopics: 'topics/getTopics',
       showTransit: 'ui/showTransit'
     }),
     autoLogin () {
