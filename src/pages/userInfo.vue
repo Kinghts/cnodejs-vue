@@ -14,11 +14,11 @@
     <div class="create_at">注册时间{{ user.create_at }}</div>
     <div class="recent_topies">
       <div>最近创建的话题</div>
-      <cell v-for="topic in user.recent_topics" :topic="topic" :key="topic"></cell>
+      <cell v-for="topic in user.recent_topics" :topic="topic" :key="topic.id"></cell>
     </div>
     <div class="recent_replies">
       <div>最近参与的话题</div>
-      <cell v-for="topic in user.recent_replies" :topic="topic" :key="topic"></cell>
+      <cell v-for="topic in user.recent_replies" :topic="topic" :key="topic.id"></cell>
     </div>
   </div>
 </template>
