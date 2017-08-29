@@ -19,13 +19,7 @@
       }
     },
     mounted () {
-      this.loginname = this.$store.state.route.params.loginname || this.$store.state.user.loginname
-      if (!this.loginname) {
-        alert('请先登录')
-        this.$router.go(-1)
-      } else {
-        this.getCollections([this.loginname])
-      }
+      this.loginname = this.$store.state.user.loginname
     },
     computed: {
       ...mapState({

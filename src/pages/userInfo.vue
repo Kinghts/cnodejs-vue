@@ -25,41 +25,18 @@
 
 <script>
   import config from '../config'
-  import VUE from 'vue'
   import cell from '../components/topicCell'
+  import { mapState } from 'vuex'
   export default {
     data () {
       return {
-        config: config,
-        user: {
-          loginname: '',
-          avatar_url: '',
-          githubUsername: '',
-          create_at: '',
-          score: '',
-          recent_topics: '',
-          recent_replies: ''
-        }
+        config: config
       }
     },
-    mounted () {
-      let username = this.$store.state.route.params.username
-      if (username) {
-        this.getUserInfo(username)
-      }
-    },
-    methods: {
-      getUserInfo: function (username) {
-        VUE.http.get(config.apiUserBaseUrl + '/' + username)
-          .then(res => {
-            let _data = res.body.data
-            for (let key in _data) {
-              if (this.user.hasOwnProperty(key)) {
-                this.user[key] = _data[key]
-              }
-            }
-          })
-      }
+    computed: {
+      ...mapState({
+        user: state => state.user
+      })
     },
     components: {
       'cell': cell

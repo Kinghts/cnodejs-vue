@@ -20,44 +20,56 @@
 
 <script>
   import config from '../config.js'
-  import { mapActions } from 'vuex'
+  import { mapState, mapActions } from 'vuex'
   import Editor from '../components/editor'
   export default {
     data () {
       return {
         'config': config,
-        'editMode': false,
         'id': '',
         'tab': '',
         'title': '',
-        'content': ''
+        'content': '',
+        'isNewTopic': true
       }
     },
+    computed: {
+      ...mapState({
+        eTopic: state => state.editor
+      })
+    },
     mounted () {
-      let _params = this.$store.state.route.params
-      if (_params.id) { // 正在编辑主题
-        this.id = _params.id
-        this.editMode = true
-        this.tab = _params.tab
-        this.title = _params.title
-        this.content = _params.content
+      if (this.eTopic.isNewTopic) { // 新建主题
+      } else { // 修改主题
+        this.id = this.eTopic.id
+        this.tab = this.eTopic.tab
+        this.title = this.eTopic.title
+        this.content = this.eTopic.content
+        this.isNewTopic = false
       }
+    },
+    watch: {
+      tab: function (tab) { this.updateTopicState({tab}) },
+      title: function (title) { this.updateTopicState({title}) }
     },
     methods: {
       ...mapActions({
+        getTopicContent: 'detail/getTopicContent',
         createTopic: 'detail/createTopic',
-        updateTopic: 'detail/updateTopic'
+        updateTopic: 'detail/updateTopic',
+        updateTopicState: 'editor/updateTopic'
       }),
       updateContent (content) {
-        this.content = content
+        this.updateTopicState({content})
       },
       submitTopic () {
-        if (!this.editMode) {
-          this.createTopic([this, this.tab, this.title, this.content])
+        if (this.eTopic.isNewTopic) {
+          this.createTopic([this, this.eTopic.tab, this.eTopic.title, this.eTopic.content])
         } else {
-          this.updateTopic([this, this.id, this.tab, this.title, this.content])
+          this.updateTopic([this, this.eTopic.id, this.eTopic.tab, this.eTopic.title, this.eTopic.content])
             .then(res => {
               if (res.body.success) {
+                this.getTopicContent([this, this.eTopic.id])
                 this.$router.go(-1) // 跳转回上一级
               }
             }).catch(err => {

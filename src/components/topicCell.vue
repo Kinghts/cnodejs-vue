@@ -6,7 +6,7 @@
     <div class="title_wrapper">
       <span class="tab" :class="{ hide: topic.hideTab, put_good: topic.good, put_top: topic.top }">{{ topic.tab }}</span>
       <!--这里传参数给router了-->
-      <router-link class="topic_title" :to="{ name: '详情', params: { id: topic.article_id }}">{{ topic.title }}</router-link>
+      <router-link @click.native="getTopicDetail" class="topic_title" :to="{ name: '详情'}">{{ topic.title }}</router-link>
     </div>
     <span class="count">{{ topic.reply_count }}/{{ topic.visit_count }}</span>
     <a class="last_reply_at" :href="topic.article_url">
@@ -16,11 +16,20 @@
 </template>
 
 <script>
+  import { mapActions } from 'vuex'
   export default {
     name: 'cell',
     props: [
       'topic'
-    ]
+    ],
+    methods: {
+      ...mapActions({
+        'getTopicContent': 'detail/getTopicContent'
+      }),
+      getTopicDetail () {
+        this.getTopicContent([this, this.topic.id])
+      }
+    }
   }
 </script>
 

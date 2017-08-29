@@ -12,7 +12,7 @@
           <span>{{ detail.visit_count }}次浏览</span>
           <span>来自{{ config.topics[detail.tab].name }}</span>
           <br>
-          <router-link :to="{ name: '编辑主题', params: { id: detail.id, title: detail.title, tab: detail.tab, content: detail.content } }" v-if="detail.author_id === user_id">编辑</router-link>
+          <router-link @click.native="editTopic" :to="{ name: '编辑主题' }" v-if="detail.author_id === user_id">编辑</router-link>
         </div>
         <input v-if="is_collect" @click="de_collectTopic" class="btn-common collect-btn" value="取消收藏" type="button">
         <input v-else @click="collectTopic" class="btn-success collect-btn" value="收藏" type="button">
@@ -63,12 +63,7 @@
       }
     },
     mounted () {
-      this.id = this.$store.state.route.params.id
-      if (!this.id) {
-        this.id = sessionStorage.topic_id
-      }
-      console.log('getcontent')
-      this.getTopicContent([this, this.id])
+      this.id = this.detail.id
     },
     computed: {
       ...mapState({
@@ -83,12 +78,18 @@
         collect: 'detail/collectTopic',
         submitTopicReply: 'detail/submitTopicReply',
         submitOtherReply: 'detail/submitOtherReply',
-        submitReplyUps: 'detail/submitReplyUps'
+        submitReplyUps: 'detail/submitReplyUps',
+        toEditMode: 'editor/toEditMode',
+        getCollections: 'collect/getCollections'
       }),
+      editTopic () {
+        this.toEditMode(this.detail)
+      },
       collectTopic () {
         this.collect([this, this.id, true])
           .then(res => {
             console.log('收藏成功')
+            this.getCollections([this.$store.state.user.loginname])
           })
           .catch(err => {
             alert(err)
@@ -98,6 +99,7 @@
         this.collect([this, this.id, false])
           .then(res => {
             console.log('取消收藏成功')
+            this.getCollections([this.$store.state.user.loginname])
           })
           .catch(err => {
             alert(err)

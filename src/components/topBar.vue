@@ -5,11 +5,11 @@
     </div>
     <div class="right-panel">
       <router-link class="link" to="/home/all">首页</router-link>
-      <router-link class="avatar link" v-if="userinfo.loginname" :to="{ name: '用户信息', params: { username: userinfo.loginname }}">
+      <router-link class="avatar link" v-if="userinfo.loginname" :to="{ name: '用户信息' }">
         <img :src=userinfo.avatar_url alt="">
       </router-link>
       <router-link class="link" v-else to="/login">登录</router-link>
-      <router-link class="favorites link" :to="{ name: '收藏', params: { loginname: loginname } }">收藏</router-link>
+      <router-link @click.native="getCollect" class="favorites link" :to="{ name: '收藏' }">收藏</router-link>
       <router-link class="messages link" to="/messages">消息</router-link>
       <router-link class="link" to="/create">发布主题</router-link>
     </div>
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import { mapState, mapActions } from 'vuex'
   export default {
     computed: {
       ...mapState({
@@ -26,6 +26,12 @@
       })
     },
     methods: {
+      ...mapActions({
+        getCollections: 'collect/getCollections'
+      }),
+      getCollect () {
+        this.getCollections([this.loginname])
+      },
       goBack: function () {
         this.$router.go(-1)
       }

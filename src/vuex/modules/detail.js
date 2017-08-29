@@ -159,6 +159,8 @@ export default {
           if (res.body.success) {
             commit('UPDATE_COLLECT_STATUS', collect)
             resolve(true)
+          } else {
+            reject('收藏/取消收藏失败')
           }
         })
         .catch(err => {
