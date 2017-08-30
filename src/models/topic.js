@@ -4,7 +4,6 @@ import config from '../config'
    */
 let Topic = function () {
   this.id = ''
-  this.article_id = ''
   this.author_id = ''
   this.author_name = ''
   this.avatar_url = ''
@@ -20,9 +19,8 @@ let Topic = function () {
 
 Topic.createTopic = function (data) {
   let topic = new Topic()
-  topic.id = data.id
-  topic.article_id = data.id
-  topic.author_id = data.author_id
+  Object.assign(topic, data)
+  delete topic.author
   topic.author_name = data.author.loginname
   topic.avatar_url = data.author.avatar_url
   if (data.tab) {
@@ -31,12 +29,6 @@ Topic.createTopic = function (data) {
     topic.tab = config.topics.ask.name
   }
   topic.hideTab = false
-  topic.title = data.title
-  topic.reply_count = data.reply_count
-  topic.visit_count = data.visit_count
-  topic.last_reply_at = data.last_reply_at // edit
-  topic.good = data.good
-  topic.top = data.top
   return topic
 }
 

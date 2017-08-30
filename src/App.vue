@@ -10,6 +10,7 @@
 
 <script>
 import { mapState, mapActions } from 'vuex'
+import Store from 'store2'
 import Transition from './components/transition'
 import TopBar from './components/topBar'
 export default {
@@ -20,7 +21,8 @@ export default {
     }
   },
   mounted () {
-    if (localStorage.accesstoken) { // 用户以前登陆过
+    let isLogin = Store.local.namespace('user').size() === 1
+    if (isLogin) { // 用户以前登陆过
       if (!this.$store.state.user.id) { // 用户当前并未登录
         this.autoLogin()
       }
@@ -41,7 +43,8 @@ export default {
     autoLogin () {
       this.transitContent = '自动登陆中...'
       this.showTransit(true)
-      this.login(localStorage.accesstoken)
+      let store = Store.local.namespace('user')
+      this.login(store(store.keys()[0]).accesstoken)
         .then(() => {
           console.log('自动登录成功')
           this.showTransit(false)

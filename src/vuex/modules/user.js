@@ -1,5 +1,6 @@
 import config from '../../config'
 import VUE from 'vue'
+import { User } from '../../models/user'
 
 export default {
   namespaced: true,
@@ -20,14 +21,14 @@ export default {
         state.id = ''
         state.accesstoken = ''
       }
+
       for (var key in data) {
         if (data.hasOwnProperty(key) && state.hasOwnProperty(key)) {
           state[key] = data[key]
-          // 将用户信息持久化
-          if (isLogin) {
-            localStorage[key] = data[key]
-          }
         }
+      }
+      if (isLogin) {
+        User.update('local', state.loginname, data)
       }
     }
   },
