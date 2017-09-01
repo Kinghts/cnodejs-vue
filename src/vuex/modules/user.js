@@ -21,7 +21,6 @@ export default {
         state.id = ''
         state.accesstoken = ''
       }
-
       for (var key in data) {
         if (data.hasOwnProperty(key) && state.hasOwnProperty(key)) {
           state[key] = data[key]
@@ -33,7 +32,7 @@ export default {
     }
   },
   actions: {
-    login ({ commit }, accesstoken) {
+    login ({ commit }, [accesstoken]) {
       return new Promise((resolve, reject) => {
         VUE.http.post(config.accesstokenCheckUrl, {accesstoken: accesstoken})
           .then(res => {

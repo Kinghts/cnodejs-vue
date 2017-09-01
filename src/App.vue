@@ -44,7 +44,8 @@ export default {
       this.transitContent = '自动登陆中...'
       this.showTransit(true)
       let store = Store.local.namespace('user')
-      this.login(store(store.keys()[0]).accesstoken)
+      console.log(store(store.keys()[0]))
+      this.login([store(store.keys()[0]).accesstoken])
         .then(() => {
           console.log('自动登录成功')
           this.showTransit(false)

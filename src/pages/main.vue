@@ -23,7 +23,7 @@
       }
     },
     mounted () {
-      this.getTopics([this, '/home/all'])
+      this.getTopics([this, this.$router.history.current.path])
     },
     computed: {
       ...mapState({
