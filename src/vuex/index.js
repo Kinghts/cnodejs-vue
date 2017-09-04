@@ -7,6 +7,7 @@ import DetailModule from './modules/detail'
 import UserModule from './modules/user'
 import EditorModule from './modules/editor'
 import CollectModule from './modules/collect'
+import MessagesModule from './modules/messages'
 
 Vue.use(Vuex)
 
@@ -17,7 +18,8 @@ export default new Vuex.Store({
     detail: DetailModule,
     user: UserModule,
     editor: EditorModule,
-    collect: CollectModule
+    collect: CollectModule,
+    messages: MessagesModule
   },
   // 使用sessionStorage暂存状态
   plugins: [createPersistedState({ storage: window.sessionStorage })]

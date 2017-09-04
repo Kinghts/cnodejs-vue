@@ -9,6 +9,7 @@ const accesstokenCheckUrl = apiBaseUrl + '/accesstoken'
 import Detail from './pages/detail'
 import EditTopic from './pages/editTopic'
 import Collect from './pages/collect'
+import Messages from './pages/messages'
 
 export default {
   pages: {
@@ -17,18 +18,6 @@ export default {
       path: '/home',
       redirect: true,
       url: '/home/all'
-    },
-    getstart: {
-      name: '新手入门',
-      path: '/getstart',
-      redirect: false,
-      url: baseUrl + '/getstart'
-    },
-    api: {
-      name: 'API',
-      path: '/api',
-      redirect: false,
-      url: baseUrl + '/api'
     },
     detail: {
       name: '详情',
@@ -57,6 +46,12 @@ export default {
       redirect: false,
       url: '',
       component: Collect
+    },
+    message: {
+      name: '消息',
+      path: '/messages',
+      redirect: false,
+      component: Messages
     }
   },
   topics: {

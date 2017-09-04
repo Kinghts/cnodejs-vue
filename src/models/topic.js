@@ -31,8 +31,10 @@ Topic.createTopic = function (data) {
     })
   }
   delete topic.author
-  topic.author_name = data.author.loginname
-  topic.avatar_url = data.author.avatar_url
+  if (data.author) {
+    topic.author_name = data.author.loginname
+    topic.avatar_url = data.author.avatar_url
+  }
   if (data.tab) {
     topic.tab = data.good ? config.topics.good.name : config.topics[data.tab].name
   } else { // 上古帖子没有tab

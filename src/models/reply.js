@@ -13,8 +13,10 @@ Reply.createReply = function (data) {
   Object.assign(data)
   delete reply.author
   delete reply.ups
-  reply.author_name = data.author.loginname
-  reply.avatar_url = data.author.avatar_url
+  if (data.author) {
+    reply.author_name = data.author.loginname
+    reply.avatar_url = data.author.avatar_url
+  }
   reply.upsCount = data.ups.length
 }
 export {
