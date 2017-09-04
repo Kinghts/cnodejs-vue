@@ -35,6 +35,9 @@ User.update = function (storageType, loginname, data) {
   }
   store(loginname, old)
 }
+User.clear = function (storageType, username) {
+  Store[storageType].namespace('user').clear(username)
+}
 /**
  * 传入session或者local
  */

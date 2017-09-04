@@ -52,6 +52,12 @@ export default {
           })
       })
     },
+    logout ({ commit }, [username, that]) {
+      User.clear('local', username)
+      if (that.$store.state.user.loginname === username) {
+        commit('UPDATE_USERINFO', [new User(), false])
+      }
+    },
     getUserInfo ({ commit }, username) {
       VUE.http.get(config.apiUserBaseUrl + '/' + username)
         .then(res => {

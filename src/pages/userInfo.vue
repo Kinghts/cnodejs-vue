@@ -4,8 +4,9 @@
 <template>
   <div id="user_info">
     <div class="avatar">
-      <img class="" :src="user.avatar_url" alt="avatar">
+      <img :src="user.avatar_url" alt="avatar">
       <span>{{ user.loginname }}</span>
+      <input v-if="user.accesstoken" @click="logout" value="退出登录" type="button">
     </div>
     <div class="user_score">{{ user.score }}积分</div>
     <div class="user_githubname">
@@ -26,7 +27,7 @@
 <script>
   import config from '../config'
   import cell from '../components/topicCell'
-  import { mapState } from 'vuex'
+  import { mapState, mapActions } from 'vuex'
   export default {
     data () {
       return {
@@ -37,6 +38,15 @@
       ...mapState({
         user: state => state.user
       })
+    },
+    methods: {
+      ...mapActions({
+        userLogout: 'user/logout'
+      }),
+      logout () {
+        this.userLogout([this.user.loginname, this])
+        this.$router.push('home/all')
+      }
     },
     components: {
       'cell': cell
