@@ -1,6 +1,6 @@
 <template>
   <div class="cell">
-    <router-link :username="2333" class="avatar pull-left" :to="{ name: '用户信息',params: { username: topic.author_name }}">
+    <router-link @click.native="getUserInfo" class="avatar pull-left" :to="{ name: '用户信息' }">
       <img :src="topic.avatar_url" alt="avatar">
     </router-link>
     <div class="title_wrapper">
@@ -17,6 +17,7 @@
 
 <script>
   import { mapActions } from 'vuex'
+
   export default {
     name: 'cell',
     props: [
@@ -24,8 +25,12 @@
     ],
     methods: {
       ...mapActions({
-        'getTopicContent': 'detail/getTopicContent'
+        getTopicContent: 'detail/getTopicContent',
+        getUInfo: 'user/getUserInfo'
       }),
+      getUserInfo: function () {
+        this.getUInfo(this.topic.author_name)
+      },
       getTopicDetail () {
         this.getTopicContent([this, this.topic.id])
       }

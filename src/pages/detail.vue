@@ -8,7 +8,7 @@
         <span class="title">{{ detail.title }}</span>
         <div class="changes">
           <span>发布于{{ detail.create_at }}</span>
-          <span>作者{{ detail.author.loginname }}</span>
+          <router-link @click.native="getUserInfo" :to="{ name: '用户信息' }">作者{{ detail.author.loginname }}</router-link>
           <span>{{ detail.visit_count }}次浏览</span>
           <span>来自{{ config.topics[detail.tab].name }}</span>
           <br>
@@ -79,8 +79,12 @@
         submitOtherReply: 'detail/submitOtherReply',
         submitReplyUps: 'detail/submitReplyUps',
         toEditMode: 'editor/toEditMode',
-        getCollections: 'collect/getCollections'
+        getCollections: 'collect/getCollections',
+        getUInfo: 'user/getUserInfo'
       }),
+      getUserInfo () {
+        this.getUInfo(this.detail.author.loginname)
+      },
       editTopic () {
         this.toEditMode(this.detail)
       },
@@ -158,7 +162,7 @@
   .changes {
     color: #838383;
   }
-  .changes span {
+  .changes * {
     font-size: 12px;
   }
   .changes span:before {

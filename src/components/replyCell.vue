@@ -1,13 +1,11 @@
 <template>
   <div class="cell">
     <div class="author_content">
-      <a class="user_avatar" :href="config.apiUserBaseUrl + reply.author.loginname">
+      <router-link class="user_avatar" @click.native="getUserInfo" :to="{ name: '用户信息' }">
         <img :src="reply.author.avatar_url" alt="avatar">
-      </a>
+      </router-link>
       <div class="user_info">
-        <a :href="config.apiUserBaseUrl + reply.author.loginname">
-          {{ reply.author.loginname }}
-        </a>
+        <router-link @click.native="getUserInfo" :to="{ name: '用户信息' }">{{reply.author.loginname}}</router-link>
         <a :href="config.topicUrl + '#' + reply.id">
           {{ index + 1 }}楼•{{ reply.create_at }}
         </a>
@@ -25,6 +23,7 @@
 
 <script>
   import config from '../config'
+  import { mapActions } from 'vuex'
   export default {
     data () {
       return {
@@ -33,6 +32,12 @@
     },
     props: ['index', 'reply'],
     methods: {
+      ...mapActions({
+        getUInfo: 'user/getUserInfo'
+      }),
+      getUserInfo: function () {
+        this.getUInfo(this.reply.author.loginname)
+      },
       replyOther () { // 回复其他评论
         this.$emit('reply', this.reply)
       },
