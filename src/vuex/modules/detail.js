@@ -49,7 +49,7 @@ export default {
   actions: {
     getTopicContent ({ commit }, [that, id]) {
       console.log(id)
-      let url = config.apiBaseUrl + '/topic/' + id + '?mdrender=false'
+      let url = config.apiBaseUrl + '/topic/' + id + '?mdrender=true'
       if (that.$store.state.user.accesstoken) { // 用户已登录
         url += '&accesstoken=' + that.$store.state.user.accesstoken
       }

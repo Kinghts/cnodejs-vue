@@ -18,8 +18,7 @@
         <span @click="replyOther" class="reply">回复</span>
       </div>
     </div>
-    <div class="reply_content">
-      {{ reply.content }}
+    <div v-html="reply.content" class="reply_content">
     </div>
   </div>
 </template>

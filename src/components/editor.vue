@@ -1,30 +1,40 @@
 <template>
   <div>
-    <textarea class="editor-content"></textarea>
+    <div class="editor-content"></div>
   </div>
 </template>
 
 <script>
-  import CodeMirror from 'codemirror/lib/codemirror'
-  import 'codemirror/lib/codemirror.css'
+  import config from '../config.js'
+  import 'quill/dist/quill.snow.css'
+  import Quill from 'quill/dist/quill.js'
+
   export default {
     props: ['content'],
     data () {
       return {
-        'codemirror': null
+        'quill': null // markdown编辑器
       }
     },
     mounted () {
-      this.codemirror = CodeMirror.fromTextArea(document.querySelector('.editor-content'))
-      this.codemirror.on('change', (codemirror) => {
-        this.$emit('contentChange', codemirror.getValue())
+      this.quill = new Quill('.editor-content', {
+        modules: { toolbar: config.editorToolBarOptions },
+        theme: 'snow'
+      })
+      this.quill.on('text-change', (delta, oldDelta, source) => {
+        this.$emit('contentChange', this.quill.getText())
       })
     },
     watch: {
       content: function (newV, oldV) { // mounted里拿不到content
-        this.codemirror.setValue(String(newV))
+        this.quill.setText(String(newV), 'user')
       }
     }
   }
 </script>
 
+<style scoped>
+  .editor-content {
+    background-color: white;
+  }
+</style>

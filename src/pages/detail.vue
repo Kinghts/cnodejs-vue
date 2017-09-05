@@ -18,9 +18,8 @@
         <input v-else @click="collectTopic" class="btn-success collect-btn" value="收藏" type="button">
       </div>
       <div class="inner">
-        <div class="topic_content">
-        {{ detail.content }}
-      </div>
+        <div v-html="detail.content" class="topic_content">
+        </div>
       </div>
     </div>
     <div class="panel">
@@ -164,5 +163,11 @@
   }
   .changes span:before {
     content: '•'
+  }
+  .edit-reply div {
+    height: 200px;
+  }
+  .editor-submit {
+    margin-top: 50px;
   }
 </style>
