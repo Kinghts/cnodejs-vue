@@ -29,7 +29,6 @@ export default {
           state[key] = detail[key]
         }
       }
-      sessionStorage.topic_id = state.id // 将topic的id存储在localStorage中，避免页面刷新后报错
     },
     UPDATE_COLLECT_STATUS (state, collect) {
       state.is_collect = collect
@@ -93,9 +92,6 @@ export default {
       })
     },
     submitTopicReply ({ commit }, [that, id, content]) {
-      if (!id) {
-        id = localStorage.topic_id
-      }
       let url = config.apiBaseUrl + '/topic/' + id + '/replies'
       VUE.http.post(url, {
         accesstoken: that.$store.state.user.accesstoken,
@@ -109,9 +105,6 @@ export default {
       })
     },
     submitOtherReply ({ commit }, [that, id, content, replyId]) {
-      if (!id) {
-        id = sessionStorage.topic_id
-      }
       let url = config.apiBaseUrl + '/topic/' + id + '/replies'
       VUE.http.post(url, {
         accesstoken: that.$store.state.user.accesstoken,
