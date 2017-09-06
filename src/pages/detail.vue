@@ -54,15 +54,11 @@
     data () {
       return {
         'config': config,
-        'id': '',
         'topicReply': '', // 回复内容
         'isReplyTopic': true, // 回复主题或者回复评论
         'repliedId': '', // 被回复的评论的id
         'repliedAuthor': '' // 被回复的评论的作者
       }
-    },
-    mounted () {
-      this.id = this.detail.id
     },
     computed: {
       ...mapState({
@@ -89,7 +85,7 @@
         this.toEditMode(this.detail)
       },
       collectTopic () {
-        this.collect([this, this.id, true])
+        this.collect([this, this.detail.id, true])
           .then(res => {
             console.log('收藏成功')
             this.getCollections([this.$store.state.user.loginname])
@@ -99,7 +95,7 @@
           })
       },
       de_collectTopic () {
-        this.collect([this, this.id, false])
+        this.collect([this, this.detail.id, false])
           .then(res => {
             console.log('取消收藏成功')
             this.getCollections([this.$store.state.user.loginname])
@@ -112,7 +108,7 @@
         this.topicReply = content
       },
       submitTReply () {
-        this.submitTopicReply([this, this.id, this.topicReply])
+        this.submitTopicReply([this, this.detail.id, this.topicReply])
       },
       changeReplyStatus (reply) {
         this.isReplyTopic = false
@@ -120,7 +116,7 @@
         this.repliedAuthor = '回复' + reply.author.loginname
       },
       submitOReply () { // 回复其他人的评论
-        this.submitOtherReply([this, this.id, this.topicReply, this.repliedId])
+        this.submitOtherReply([this, this.detail.id, this.topicReply, this.repliedId])
       },
       submitRUps (reply) { // 点赞评论
         this.submitReplyUps([this, reply.id])
