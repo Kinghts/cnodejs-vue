@@ -1,7 +1,9 @@
-import config from '../../config'
-import VUE from 'vue'
 import { User } from '../../models/user'
+import UserService from '../../service/userService'
 
+/**
+ * 仅保存userInfo视图的状态，已登陆用户的信息存储在localStorage中
+ */
 export default {
   namespaced: true,
   state: {
@@ -27,42 +29,43 @@ export default {
         }
       }
       if (isLogin) {
-        User.update('local', state.loginname, data)
+        UserService.updateLoggedUserInfo(data)
       }
     }
   },
   actions: {
     login ({ commit }, [accesstoken]) {
       return new Promise((resolve, reject) => {
-        VUE.http.post(config.accesstokenCheckUrl, {accesstoken: accesstoken})
-          .then(res => {
-            commit('UPDATE_USERINFO', [res.body, true]) // 更新id
-            const url = config.apiUserBaseUrl + '/' + res.body.loginname
-            return VUE.http.get(url)
+        UserService.checkAccessToken(accesstoken)
+          .then(data => {
+            commit('UPDATE_USERINFO', [data, true]) // 更新id、loginname、avatar_url
+            return UserService.getUserInfo(data.loginname)
           })
-          .then(res => {
-            let _data = res.body.data
-            _data.accesstoken = accesstoken
-            commit('UPDATE_USERINFO', [_data, true]) // 更新其他详细信息
+          .then(data => {
+            data.accesstoken = accesstoken
+            commit('UPDATE_USERINFO', [data, true]) // 更新其他详细信息
             resolve()
           })
           .catch(err => {
-            console.log(err)
-            reject('请求失败,accesstoken可能不正确')
+            reject(err)
           })
       })
     },
     logout ({ commit }, [username, that]) {
-      User.clear('local', username)
+      UserService.clearLoggedUserInfo()
       if (that.$store.state.user.loginname === username) {
         commit('UPDATE_USERINFO', [new User(), false])
       }
     },
     getUserInfo ({ commit }, username) {
-      VUE.http.get(config.apiUserBaseUrl + '/' + username)
-        .then(res => {
-          commit('UPDATE_USERINFO', [res.body.data, false])
+      UserService.getUserInfo(username)
+        .then(data => {
+          commit('UPDATE_USERINFO', [data, false])
         })
+    },
+    getLoggedUserInfo ({ commit }) {
+      let userInfo = UserService.getLoggedUserInfo()
+      commit('UPDATE_USERINFO', [userInfo, false])
     }
   }
 }
