@@ -8,6 +8,7 @@ import UserModule from './modules/user'
 import EditorModule from './modules/editor'
 import CollectModule from './modules/collect'
 import MessagesModule from './modules/messages'
+import TopBarModule from './modules/topBar'
 
 Vue.use(Vuex)
 
@@ -19,7 +20,8 @@ export default new Vuex.Store({
     user: UserModule,
     editor: EditorModule,
     collect: CollectModule,
-    messages: MessagesModule
+    messages: MessagesModule,
+    topBar: TopBarModule
   },
   // 使用sessionStorage暂存状态
   plugins: [createPersistedState({ storage: window.sessionStorage })]

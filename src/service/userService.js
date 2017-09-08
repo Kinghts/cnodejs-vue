@@ -7,6 +7,9 @@ let localStore = Store.local.namespace('user')
 
 export default {
   localStore: localStore,
+  isLogged: function () {
+    return this.localStore.size() === 1
+  },
   checkAccessToken: function (accessToken) {
     return new Promise((resolve, reject) => {
       VUE.http.post(config.accesstokenCheckUrl, {accesstoken: accessToken})

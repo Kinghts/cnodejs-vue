@@ -5,8 +5,8 @@
     </div>
     <div class="right-panel">
       <router-link class="link" to="/home/all">首页</router-link>
-      <router-link class="avatar link" v-if="userinfo.loginname" :to="{ name: '用户信息' }">
-        <img :src=userinfo.avatar_url alt="">
+      <router-link class="avatar link" v-if="loginname" :to="{ name: '用户信息' }">
+        <img :src="avatar_url" alt="">
       </router-link>
       <router-link class="link" v-else to="/login">登录</router-link>
       <router-link @click.native="getCollect" class="favorites link" :to="{ name: '收藏' }">收藏</router-link>
@@ -18,18 +18,23 @@
 
 <script>
   import { mapState, mapActions } from 'vuex'
+  import UserService from '../service/userService'
+
   export default {
     mounted () {
-      if (this.userinfo.accesstoken) { // 用户已登陆
-        this.getMessagesCount([this, this.userinfo.accesstoken])
+      if (UserService.isLogged()) { // 用户已登陆
+        this.getMessagesCount([this, this.loggedUserInfo.accesstoken])
       }
     },
     computed: {
       ...mapState({
-        userinfo: state => state.user,
-        loginname: state => state.user.loginname,
+        loginname: state => state.topBar.loginname,
+        avatar_url: state => state.topBar.avatarURL,
         msgCount: state => state.messages.hasnot_read_count
-      })
+      }),
+      loggedUserInfo () {
+        return UserService.getLoggedUserInfo()
+      }
     },
     methods: {
       ...mapActions({
@@ -39,13 +44,17 @@
         getMessagesCount: 'messages/getMessagesCount'
       }),
       getCollect () {
-        this.getCollections([this.loginname])
+        if (UserService.isLogged()) {
+          this.getCollections([this.loginname])
+        }
       },
       getMsg () {
-        if (this.msgCount) {
-          this.markAllMessages([this, this.userinfo.accesstoken])
+        if (UserService.isLogged()) {
+          if (this.msgCount) {
+            this.markAllMessages([this, this.loggedUserInfo.accesstoken])
+          }
+          this.getMessages([this, this.loggedUserInfo.accesstoken])
         }
-        this.getMessages([this, this.userinfo.accesstoken])
       },
       goBack: function () {
         this.$router.go(-1)

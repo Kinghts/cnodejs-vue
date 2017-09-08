@@ -41,10 +41,12 @@
     },
     methods: {
       ...mapActions({
-        userLogout: 'user/logout'
+        userLogout: 'user/logout',
+        clearTopBarUserInfo: 'topBar/clearUserInfo'
       }),
       logout () {
         this.userLogout([this.user.loginname, this])
+        this.clearTopBarUserInfo()
         this.$router.push('home/all')
       }
     },
