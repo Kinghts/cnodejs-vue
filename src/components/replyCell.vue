@@ -33,7 +33,7 @@
     props: ['index', 'reply'],
     methods: {
       ...mapActions({
-        getUInfo: 'user/getUserInfo'
+        getUInfo: 'userInfo/getUserInfo'
       }),
       getUserInfo: function () {
         this.getUInfo(this.reply.author.loginname)

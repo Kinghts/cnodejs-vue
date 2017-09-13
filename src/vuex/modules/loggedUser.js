@@ -7,7 +7,7 @@ import UserService from '../../service/userService'
 export default {
   namespaced: true,
   state: {
-    id: '', // 已登陆用户才有
+    id: '',
     loginname: '',
     avatar_url: '',
     githubUsername: '',
@@ -15,22 +15,16 @@ export default {
     score: '',
     recent_topics: '',
     recent_replies: '',
-    accesstoken: '' // 已登陆用户才有
+    accesstoken: ''
   },
   mutations: {
-    UPDATE_USERINFO (state, [data, isLogin]) {
-      if (!isLogin) {
-        state.id = ''
-        state.accesstoken = ''
-      }
+    UPDATE_USERINFO (state, [data]) {
       for (var key in data) {
         if (data.hasOwnProperty(key) && state.hasOwnProperty(key)) {
           state[key] = data[key]
         }
       }
-      if (isLogin) {
-        UserService.updateLoggedUserInfo(data)
-      }
+      UserService.updateLoggedUserInfo(data)
     }
   },
   actions: {
@@ -38,12 +32,12 @@ export default {
       return new Promise((resolve, reject) => {
         UserService.checkAccessToken(accesstoken)
           .then(data => {
-            commit('UPDATE_USERINFO', [data, true]) // 更新id、loginname、avatar_url
+            commit('UPDATE_USERINFO', [data]) // 更新id、loginname、avatar_url
             return UserService.getUserInfo(data.loginname)
           })
           .then(data => {
             data.accesstoken = accesstoken
-            commit('UPDATE_USERINFO', [data, true]) // 更新其他详细信息
+            commit('UPDATE_USERINFO', [data]) // 更新其他详细信息
             resolve()
           })
           .catch(err => {
@@ -53,19 +47,13 @@ export default {
     },
     logout ({ commit }, [username, that]) {
       UserService.clearLoggedUserInfo()
-      if (that.$store.state.user.loginname === username) {
-        commit('UPDATE_USERINFO', [new User(), false])
-      }
+      commit('UPDATE_USERINFO', [new User()])
     },
     getUserInfo ({ commit }, username) {
       UserService.getUserInfo(username)
         .then(data => {
-          commit('UPDATE_USERINFO', [data, false])
+          commit('UPDATE_USERINFO', [data])
         })
-    },
-    getLoggedUserInfo ({ commit }) {
-      let userInfo = UserService.getLoggedUserInfo()
-      commit('UPDATE_USERINFO', [userInfo, false])
     }
   }
 }

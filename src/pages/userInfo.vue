@@ -36,12 +36,12 @@
     },
     computed: {
       ...mapState({
-        user: state => state.user
+        user: state => state.userInfo
       })
     },
     methods: {
       ...mapActions({
-        userLogout: 'user/logout',
+        userLogout: 'loggedUser/logout',
         clearTopBarUserInfo: 'topBar/clearUserInfo'
       }),
       logout () {

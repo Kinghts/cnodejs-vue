@@ -49,8 +49,8 @@ export default {
     getTopicContent ({ commit }, [that, id]) {
       console.log(id)
       let url = config.apiBaseUrl + '/topic/' + id + '?mdrender=true'
-      if (that.$store.state.user.accesstoken) { // 用户已登录
-        url += '&accesstoken=' + that.$store.state.user.accesstoken
+      if (that.$store.state.loggedUser.accesstoken) { // 用户已登录
+        url += '&accesstoken=' + that.$store.state.loggedUser.accesstoken
       }
       VUE.http.get(url)
         .then(res => {
@@ -64,7 +64,7 @@ export default {
       that.$http.post(
         url,
         {
-          accesstoken: that.$store.state.user.accesstoken,
+          accesstoken: that.$store.state.loggedUser.accesstoken,
           title: title,
           tab: 'dev', // tab,
           content: content
@@ -81,7 +81,7 @@ export default {
       let url = config.apiBaseUrl + '/topics/update'
       return new Promise(function (resolve, reject) {
         VUE.http.post(url, {
-          accesstoken: that.$store.state.user.accesstoken,
+          accesstoken: that.$store.state.loggedUser.accesstoken,
           topic_id: id,
           title: title,
           tab: tab,
@@ -94,7 +94,7 @@ export default {
     submitTopicReply ({ commit }, [that, id, content]) {
       let url = config.apiBaseUrl + '/topic/' + id + '/replies'
       VUE.http.post(url, {
-        accesstoken: that.$store.state.user.accesstoken,
+        accesstoken: that.$store.state.loggedUser.accesstoken,
         content: content
       }).then((res) => {
         if (res.body.success) {
@@ -107,7 +107,7 @@ export default {
     submitOtherReply ({ commit }, [that, id, content, replyId]) {
       let url = config.apiBaseUrl + '/topic/' + id + '/replies'
       VUE.http.post(url, {
-        accesstoken: that.$store.state.user.accesstoken,
+        accesstoken: that.$store.state.loggedUser.accesstoken,
         content: content,
         reply_id: replyId
       }).then((res) => {
@@ -121,14 +121,14 @@ export default {
     submitReplyUps ({ commit }, [that, replyId]) { // 给评论点赞/取消点赞
       let url = config.apiBaseUrl + '/reply/' + replyId + '/ups'
       VUE.http.post(url, {
-        accesstoken: that.$store.state.user.accesstoken
+        accesstoken: that.$store.state.loggedUser.accesstoken
       }).then((res) => {
         if (res.body.success) {
           let up = false
           if (res.body.action === 'up') {
             up = true
           }
-          commit('UPDATE_REPLY_UPS', [replyId, that.$store.state.user.id, up])
+          commit('UPDATE_REPLY_UPS', [replyId, that.$store.state.loggedUser.id, up])
         } else {
           console.log(res.body.message)
         }
@@ -145,7 +145,7 @@ export default {
       }
       return new Promise(function (resolve, reject) {
         VUE.http.post(url, {
-          accesstoken: that.$store.state.user.accesstoken,
+          accesstoken: that.$store.state.loggedUser.accesstoken,
           topic_id: id
         })
         .then(res => {

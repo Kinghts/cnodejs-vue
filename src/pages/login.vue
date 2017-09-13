@@ -15,7 +15,6 @@
 
 <script>
   import { mapActions } from 'vuex'
-  import UserService from '../service/userService'
 
   export default {
     data: function () {
@@ -25,14 +24,13 @@
     },
     methods: {
       ...mapActions({
-        aLogin: 'user/login'
+        aLogin: 'loggedUser/login',
+        updateUserInfoPage: 'userInfo/replaceUserInfo'
       }),
       login: function () {
         if (this.accesstoken) {
           this.aLogin([this.accesstoken])
             .then(() => {
-              let userInfo = UserService.getLoggedUserInfo()
-              this.updateTopBarUserState([userInfo.loginname, userInfo.avatar_url])
               this.$router.push('home')
             })
             .catch((err) => {

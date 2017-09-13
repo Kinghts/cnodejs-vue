@@ -64,7 +64,7 @@
       ...mapState({
         detail: state => state.detail,
         is_collect: state => state.detail.is_collect,
-        user_id: state => state.user.id // 已登录用户的id
+        user_id: state => state.loggedUser.id // 已登录用户的id
       })
     },
     methods: {
@@ -76,7 +76,7 @@
         submitReplyUps: 'detail/submitReplyUps',
         toEditMode: 'editor/toEditMode',
         getCollections: 'collect/getCollections',
-        getUInfo: 'user/getUserInfo'
+        getUInfo: 'userInfo/getUserInfo'
       }),
       getUserInfo () {
         this.getUInfo(this.detail.author.loginname)
@@ -88,7 +88,7 @@
         this.collect([this, this.detail.id, true])
           .then(res => {
             console.log('收藏成功')
-            this.getCollections([this.$store.state.user.loginname])
+            this.getCollections([this.$store.state.loggedUser.loginname])
           })
           .catch(err => {
             alert(err)
@@ -98,7 +98,7 @@
         this.collect([this, this.detail.id, false])
           .then(res => {
             console.log('取消收藏成功')
-            this.getCollections([this.$store.state.user.loginname])
+            this.getCollections([this.$store.state.loggedUser.loginname])
           })
           .catch(err => {
             alert(err)

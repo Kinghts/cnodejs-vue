@@ -19,7 +19,7 @@
       }
     },
     mounted () {
-      this.loginname = this.$store.state.user.loginname
+      this.loginname = this.$store.state.loggedUser.loginname
     },
     computed: {
       ...mapState({

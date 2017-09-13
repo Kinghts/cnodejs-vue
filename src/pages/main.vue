@@ -1,17 +1,17 @@
 <template>
   <div>
-
     <top-tab class="header" :topics="config.topics"></top-tab>
     <div class="inner no-padding" id="topic_list">
       <cell v-for="topic in topics" :key="topic.id" :topic="topic"></cell>
     </div>
-    
+    <bottom-bar class="bottom-bar"></bottom-bar>
   </div>
 </template>
 
 <script>
   import cell from '../components/topicCell.vue'
   import topTab from '../components/topTab.vue'
+  import bottomBar from '../components/bottomBar.vue'
   import config from '../config.js'
   import { mapState, mapActions } from 'vuex'
   
@@ -37,7 +37,7 @@
         getTopics: 'topics/getTopics'
       }),
       ...mapActions({
-        getUserInfo: 'user/getUserInfo'
+        getUserInfo: 'userInfo/getUserInfo'
       })
     },
     watch: {
@@ -48,7 +48,8 @@
     },
     components: {
       'cell': cell,
-      'top-tab': topTab
+      'top-tab': topTab,
+      'bottom-bar': bottomBar
     }
   }
 </script>

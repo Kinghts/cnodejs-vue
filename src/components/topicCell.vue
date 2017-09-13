@@ -26,7 +26,7 @@
     methods: {
       ...mapActions({
         getTopicContent: 'detail/getTopicContent',
-        getUInfo: 'user/getUserInfo'
+        getUInfo: 'userInfo/getUserInfo'
       }),
       getUserInfo: function () {
         this.getUInfo(this.topic.author_name)
