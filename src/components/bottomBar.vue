@@ -5,8 +5,8 @@
     </div>
     <div class="right-panel">
       <router-link class="link" to="/home/all">首页</router-link>
-      <router-link class="avatar link" v-if="loginname" :to="{ name: '用户信息' }">
-        <img :src="avatar_url" alt="">
+      <router-link class="avatar link" v-if="loggedUserInfo.loginname" :to="{ name: '用户信息' }">
+        <img :src="loggedUserInfo.avatar_url" alt="">
       </router-link>
       <router-link class="link" v-else to="/login">登录</router-link>
       <router-link @click.native="getCollect" class="favorites link" :to="{ name: '收藏' }">收藏</router-link>
@@ -18,23 +18,19 @@
 
 <script>
   import { mapState, mapActions } from 'vuex'
-  import UserService from '../service/userService'
 
   export default {
     mounted () {
-      if (UserService.isLogged()) { // 用户已登陆
+      if (this.isLogged) { // 用户已登陆
         this.getMessagesCount([this, this.loggedUserInfo.accesstoken])
       }
     },
     computed: {
       ...mapState({
-        loginname: state => state.loggedUser.loginname,
-        avatar_url: state => state.loggedUser.avatar_url,
-        msgCount: state => state.messages.hasnot_read_count
-      }),
-      loggedUserInfo () {
-        return UserService.getLoggedUserInfo()
-      }
+        loggedUserInfo: state => state.loggedUser,
+        msgCount: state => state.messages.hasnot_read_count,
+        isLogged: state => Boolean(state.loggedUser.accesstoken)
+      })
     },
     methods: {
       ...mapActions({
@@ -44,12 +40,12 @@
         getMessagesCount: 'messages/getMessagesCount'
       }),
       getCollect () {
-        if (UserService.isLogged()) {
-          this.getCollections([this.loginname])
+        if (this.isLogged) {
+          this.getCollections([this.loggedUserInfo.loginname])
         }
       },
       getMsg () {
-        if (UserService.isLogged()) {
+        if (this.isLogged) {
           if (this.msgCount) {
             this.markAllMessages([this, this.loggedUserInfo.accesstoken])
           }
