@@ -92,7 +92,7 @@
     z-index: 100;
   }
   .content {
-    margin-top: 50px;
+    margin: 50px 0px 50px 0px;
   }
   .topic-tab {
     position: fixed;

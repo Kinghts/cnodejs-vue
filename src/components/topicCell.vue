@@ -1,17 +1,24 @@
 <template>
   <div class="cell">
-    <router-link @click.native="getUserInfo" class="avatar pull-left" :to="{ name: '用户信息' }">
-      <img :src="topic.avatar_url" alt="avatar">
-    </router-link>
-    <div class="title_wrapper">
-      <span class="tab" :class="{ hide: topic.hideTab, put_good: topic.good, put_top: topic.top }">{{ topic.tab }}</span>
-      <!--这里传参数给router了-->
-      <router-link @click.native="getTopicDetail" class="topic_title" :to="{ name: '详情'}">{{ topic.title }}</router-link>
+    <div class="topic-top">
+      <router-link @click.native="getUserInfo" :to="{ name: '用户信息' }">
+        <img class="avatar" :src="topic.avatar_url" alt="avatar">
+        <span class="author-name">{{ topic.author_name }}</span>
+      </router-link>
+      <span class="last-reply-time">{{ topic.last_reply_at }}</span>
     </div>
-    <span class="count">{{ topic.reply_count }}/{{ topic.visit_count }}</span>
-    <a class="last_reply_at" :href="topic.article_url">
-      <span >{{ topic.last_reply_at }}</span>
-    </a>
+    <div class="topic-middle">
+      <router-link class="topic-title" @click.native="getTopicDetail"  :to="{ name: '详情'}">
+        {{ topic.title }}
+      </router-link>
+    </div>
+    <div class="topic-bottom">
+      <span class="tab" :class="[{ hide: topic.hideTab, put_good: topic.good || topic.top }, 'put_normal']">{{ topic.tab }}</span>
+      <span class="topic-count">
+        <span>阅读{{ topic.visit_count }}</span>
+        <span>评论{{ topic.reply_count }}</span>
+      </span>
+    </div>
   </div>
 </template>
 
@@ -38,28 +45,44 @@
   }
 </script>
 
-<style scoped>
+<style scoped lang="less">
+  @color-light: #999;
+  @font-small: 10px;
   .cell {
     background-color: #fff;
-  }
-  .count {
-    position: absolute;
-    bottom: 0;
-    left: 98px;
     text-align: left;
+    padding-left: 20px;
   }
-  .last_reply_at {
-    position: absolute;
-    bottom: 0;
-    right: 10px;
-    font-size: .8em;
-    color: #778087;
+  .topic-top {
+    .author-name {
+      margin-left: 5px;
+      font-size: 16px;
+      color: black;
+    }
+    .last-reply-time {
+      font-size: @font-small;
+      color: @color-light;
+    }
   }
-  .last_reply_at span {
-    text-align: right;
-    min-width: 50px;
-    display: inline-block;
-    white-space: nowrap;
+  .topic-middle {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    .topic-title {
+      font-size: 20px;
+      color: black;
+      white-space: nowrap;
+    }
+  }
+  .topic-bottom {
+    .tab {
+      padding: 3px 4px;
+      border-radius: 3px;
+      margin-right: 5px;
+    }
+    .topic-count {
+      font-size: @font-small;
+      color: @color-light;
+    }
   }
   .title_wrapper {
     padding-left: 45px;
@@ -67,28 +90,5 @@
     text-overflow: ellipsis;
     height: 40px;
   }
-  .tab {
-    padding: 1px 4px;
-    display: inline-block;
-    border-radius: 3px;
-    font-size: 12px;
-    line-height: 1.5em;
-    background-color: #e5e5e5;
-    color: #999;
-    vertical-align: middle;
-    margin-top: 3px;
-  }
-  .topic_title {
-    font-size: 1em;
-    width: 100%;
-    line-height: 30px;
-    display: inline-block;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    text-align: left;
-    vertical-align: middle;
-    text-decoration: none;
-    color: #000;
-  }
+
 </style>

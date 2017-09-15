@@ -60,7 +60,7 @@ export default {
 }
 </script>
   
-<style>
+<style lang="less">
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -73,6 +73,5 @@ export default {
   position: fixed;
   bottom: 0;
 }
-
-@import './assets/common.css'
+@import './assets/common.less';
 </style>
