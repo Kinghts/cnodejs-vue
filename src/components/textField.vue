@@ -19,17 +19,18 @@
   }
   .icon {
     height: 24px;
-    font-size: 20px;
+    font-size: 24px;
     position: absolute;
     z-index: 105;
     top: 50%;
     margin-top: -12px;
+    margin-left: 10px;
   }
   input {
     height: 40px;
     border: 1px solid lightgray;
     border-radius: 20px;
-    padding-left: 10px;
+    padding-left: 35px;
     font-size: 20px;
   }
 </style>
