@@ -1,6 +1,6 @@
 <template>
   <div class="main">
-    <topBar class="top-bar" styles="white">
+    <topBar class="top-bar" styles="janshu-top">
       <div slot="center" class="search">
         <textField icon="search"></textField>
       </div>
