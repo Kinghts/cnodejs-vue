@@ -6,12 +6,29 @@
       </div>
     </topBar>
     <div class="content">
-      <top-tab class="header" :topics="config.topics"></top-tab>
       <div class="inner no-padding" id="topic_list">
         <cell v-for="topic in topics" :key="topic.id" :topic="topic"></cell>
       </div>
     </div>
-    <bottom-bar class="bottom-bar"></bottom-bar>
+    <topicTab v-show="showTab" class="topic-tab" :topics="config.topics"></topicTab>
+    <bottomBar class="bottom-bar" styles="janshu-bottom">
+      <div slot="center">
+        <router-link class="link" to="/home/all">首页</router-link>
+        <span @click="showTopicTab" class="link">话题</span>
+        <router-link v-if="isLogged" class="link" to="/create">
+          新建主题
+        </router-link>
+        <router-link v-if="isLogged" class="link" to="/messages">
+          消息
+        </router-link>
+        <router-link v-if="isLogged" class="link" to="/userinfo">
+          我的
+        </router-link>
+        <router-link v-else class="link" to="/login">
+          登录
+        </router-link>
+      </div>
+    </bottomBar>
   </div>
 </template>
 
@@ -20,8 +37,7 @@
   import appBar from '../components/appBar'
   import textField from '../components/textField'
   import cell from '../components/topicCell'
-  import topTab from '../components/topTab'
-  import bottomBar from '../components/bottomBar'
+  import topicTab from '../components/topicTab'
   import config from '../config.js'
   import { mapState, mapActions } from 'vuex'
   
@@ -29,7 +45,8 @@
     name: 'main',
     data () {
       return {
-        'config': config
+        'config': config,
+        'showTab': false
       }
     },
     mounted () {
@@ -39,16 +56,18 @@
       ...mapState({
         topics: state => state.topics.topics,
         currentPath: state => state.route.path,
-        mainPath: state => state.route.path.split('/')[1]
+        mainPath: state => state.route.path.split('/')[1],
+        isLogged: state => Boolean(state.loggedUser.id)
       })
     },
     methods: {
       ...mapActions({
-        getTopics: 'topics/getTopics'
-      }),
-      ...mapActions({
+        getTopics: 'topics/getTopics',
         getUserInfo: 'userInfo/getUserInfo'
-      })
+      }),
+      showTopicTab () {
+        this.showTab = !this.showTab
+      }
     },
     watch: {
       currentPath: function (currentPath) {
@@ -61,19 +80,29 @@
       'textField': textField,
       'bottomBar': appBar,
       'cell': cell,
-      'top-tab': topTab,
-      'bottom-bar': bottomBar
+      'topicTab': topicTab
     }
   }
 </script>
 
-<style scoped>
+<style scoped lang="less">
   .top-bar {
     position: fixed;
     top: 0px;
     z-index: 100;
   }
   .content {
-    margin-top: 60px;
+    margin-top: 50px;
+  }
+  .topic-tab {
+    position: fixed;
+    bottom: 50px;
+  }
+  .link {
+    color: rgb(100,100,100);
+    text-decoration: none;
+    text-align: center;
+    line-height: inherit;
+    margin: 0px 10px 0px 10px;
   }
 </style>
