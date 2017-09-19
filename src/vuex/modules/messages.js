@@ -1,5 +1,6 @@
 import config from '../../config'
 import { Message } from '../../models/message'
+import VUE from 'vue'
 
 export default {
   namespaced: true,
@@ -17,9 +18,9 @@ export default {
     }
   },
   actions: {
-    getMessages ({ commit }, [that, accesstoken]) {
+    getMessages ({ commit }, accesstoken) {
       const url = config.apiBaseUrl + '/messages'
-      that.$http.get(url, {
+      VUE.http.get(url, {
         params: {
           accesstoken: accesstoken,
           mdrender: false
