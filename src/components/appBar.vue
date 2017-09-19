@@ -37,6 +37,11 @@
     border: 1px solid lightgray;
     background-color: white;
   }
+  .app-bar-cnodejs {
+    .app-bar-common;
+    border: 1px solid #444;
+    background-color: #444;
+  }
 
   .app-bar-janshu-common {
     border: 1px solid lightgray;
