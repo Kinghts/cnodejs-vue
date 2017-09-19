@@ -1,9 +1,7 @@
 <template>
   <div class="main">
-    <topBar class="top-bar" styles="janshu-top">
-      <div slot="center" class="search">
-        <textField icon="search"></textField>
-      </div>
+    <topBar class="top-bar" styles="cnodejs">
+      <img class="logo" slot="center" src="../assets/cnodejs_light.svg">
     </topBar>
     <div class="content">
       <div class="inner no-padding" id="topic_list">
@@ -11,7 +9,7 @@
       </div>
     </div>
     <topicTab v-show="showTab" class="topic-tab" :topics="config.topics"></topicTab>
-    <bottomBar class="bottom-bar" styles="janshu-bottom">
+    <bottomBar class="bottom-bar" styles="cnodejs">
       <div slot="center">
         <router-link class="link" to="/home/all">首页</router-link>
         <span @click="showTopicTab" class="link">话题</span>
@@ -98,6 +96,9 @@
     position: fixed;
     top: 0px;
     z-index: 100;
+    .logo {
+      max-height: 80%;
+    }
   }
   .content {
     margin: 50px 0px 50px 0px;
@@ -107,7 +108,7 @@
     bottom: 50px;
   }
   .link {
-    color: rgb(100,100,100);
+    color: rgb(255,255,255);
     text-decoration: none;
     text-align: center;
     line-height: inherit;
