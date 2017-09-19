@@ -18,10 +18,10 @@
         <router-link v-if="isLogged" class="link" to="/create">
           新建主题
         </router-link>
-        <router-link v-if="isLogged" class="link" to="/messages">
+        <router-link v-if="isLogged" @click.native="getMessages" class="link" to="/messages">
           消息
         </router-link>
-        <router-link v-if="isLogged" class="link" to="/userinfo">
+        <router-link v-if="isLogged" @click.native="replaceUserInfo" class="link" to="/userinfo">
           我的
         </router-link>
         <router-link v-else class="link" to="/login">
@@ -57,16 +57,24 @@
         topics: state => state.topics.topics,
         currentPath: state => state.route.path,
         mainPath: state => state.route.path.split('/')[1],
-        isLogged: state => Boolean(state.loggedUser.id)
+        isLogged: state => Boolean(state.loggedUser.id),
+        loggedUser: state => state.loggedUser
       })
     },
     methods: {
       ...mapActions({
         getTopics: 'topics/getTopics',
-        getUserInfo: 'userInfo/getUserInfo'
+        getMsg: 'messages/getMessages',
+        replaceUserInfoState: 'userInfo/replaceUserInfo'
       }),
       showTopicTab () {
         this.showTab = !this.showTab
+      },
+      getMessages () {
+        this.getMsg(this.loggedUser.accesstoken)
+      },
+      replaceUserInfo () {
+        this.replaceUserInfoState(this.loggedUser)
       }
     },
     watch: {
