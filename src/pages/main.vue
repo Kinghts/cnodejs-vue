@@ -108,7 +108,7 @@
     bottom: 50px;
   }
   .link {
-    color: rgb(255,255,255);
+    color: #ccc;
     text-decoration: none;
     text-align: center;
     line-height: inherit;
