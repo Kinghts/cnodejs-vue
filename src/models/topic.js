@@ -1,5 +1,6 @@
 import config from '../config'
 import { Reply } from './reply'
+import timeago from 'timeago.js'
   /**
    * 主题类
    */
@@ -41,6 +42,8 @@ Topic.createTopic = function (data) {
     topic.tab = config.topics.ask.name
   }
   topic.hideTab = false
+  // 处理最后回复时间
+  topic.last_reply_at = timeago().format(new Date(topic.last_reply_at), 'zh_CN')
   return topic
 }
 
