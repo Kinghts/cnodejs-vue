@@ -1,5 +1,6 @@
 import VUE from 'vue'
 import config from '../../config'
+import TopicService from '../../service/topicService'
 
 export default {
   namespaced: true,
@@ -46,50 +47,29 @@ export default {
     }
   },
   actions: {
-    getTopicContent ({ commit }, [that, id]) {
-      console.log(id)
-      let url = config.apiBaseUrl + '/topic/' + id + '?mdrender=true'
-      if (that.$store.state.loggedUser.accesstoken) { // 用户已登录
-        url += '&accesstoken=' + that.$store.state.loggedUser.accesstoken
-      }
-      VUE.http.get(url)
-        .then(res => {
-          commit('UPDATE_DETAIL', res.body.data)
-        }, () => {
-          alert('请求出错')
+    getTopicContent ({ commit }, [id, accesstoken]) {
+      let params = [id, accesstoken, true]
+      TopicService.getTopicContent(params)
+        .then(detail => {
+          commit('UPDATE_DETAIL', detail)
+        })
+        .catch(err => {
+          alert('获取主题详情出错')
+          console.log(err)
         })
     },
-    createTopic ({ commit }, [that, tab, title, content]) {
-      let url = config.apiTopics
-      that.$http.post(
-        url,
-        {
-          accesstoken: that.$store.state.loggedUser.accesstoken,
-          title: title,
-          tab: 'dev', // tab,
-          content: content
-        }
-      ).then(res => {
-        if (res.body.success) {
-          console.log('提交成功')
-        }
-      }).catch(err => {
-        console.log(err)
-      })
-    },
-    updateTopic ({ commit }, [that, id, tab, title, content]) {
-      let url = config.apiBaseUrl + '/topics/update'
-      return new Promise(function (resolve, reject) {
-        VUE.http.post(url, {
-          accesstoken: that.$store.state.loggedUser.accesstoken,
-          topic_id: id,
-          title: title,
-          tab: tab,
-          content: content
+    createTopic ({ commit }, [accesstoken, title, tab, content]) {
+      TopicService.createTopic([accesstoken, title, tab, content])
+        .then(() => {
+          alert('新建主题成功')
         })
-        .then(res => resolve(res))
-        .catch(err => reject(err))
-      })
+        .catch((err) => {
+          alert('新建主题失败')
+          console.log(err)
+        })
+    },
+    updateTopic ({ commit }, [accesstoken, topicID, title, tab, content]) {
+      return TopicService.updateTopic([accesstoken, topicID, title, tab, content])
     },
     submitTopicReply ({ commit }, [that, id, content]) {
       let url = config.apiBaseUrl + '/topic/' + id + '/replies'

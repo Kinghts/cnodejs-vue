@@ -48,7 +48,7 @@
       }
     },
     mounted () {
-      this.getTopics([this, this.$router.history.current.path])
+      this.getTopics(this.$router.history.current.path)
     },
     computed: {
       ...mapState({
@@ -78,7 +78,7 @@
     watch: {
       currentPath: function (currentPath) {
         console.log('current path: ' + currentPath)
-        this.getTopics([this, currentPath])
+        this.getTopics(currentPath)
       }
     },
     components: {

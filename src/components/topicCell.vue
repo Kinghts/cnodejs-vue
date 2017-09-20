@@ -39,7 +39,11 @@
         this.getUInfo(this.topic.author_name)
       },
       getTopicDetail () {
-        this.getTopicContent([this, this.topic.id])
+        let params = [this.topic.id]
+        if (this.$store.state.loggedUser.id) {
+          params[1] = this.$store.state.loggedUser.accesstoken
+        }
+        this.getTopicContent(params)
       }
     }
   }

@@ -63,17 +63,17 @@
         this.updateTopicState({content})
       },
       submitTopic () {
+        let accesstoken = this.$store.state.loggedUser.accesstoken
         if (this.eTopic.isNewTopic) {
-          this.createTopic([this, this.eTopic.tab, this.eTopic.title, this.eTopic.content])
+          this.createTopic([accesstoken, this.eTopic.title, this.eTopic.tab, this.eTopic.content])
         } else {
-          this.updateTopic([this, this.eTopic.id, this.eTopic.tab, this.eTopic.title, this.eTopic.content])
-            .then(res => {
-              if (res.body.success) {
-                this.getTopicContent([this, this.eTopic.id])
-                this.$router.go(-1) // 跳转回上一级
-              }
+          this.updateTopic([accesstoken, this.eTopic.id, this.eTopic.title, this.eTopic.tab, this.eTopic.content])
+            .then(() => {
+              this.getTopicContent([this, this.eTopic.id])
+              this.$router.go(-1) // 跳转回上一级
             }).catch(err => {
-              alert(err)
+              alert('保存主题失败')
+              console.log(err)
             })
         }
       }

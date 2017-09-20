@@ -1,5 +1,5 @@
-import config from '../../config'
 import { Topic } from '../../models/topic'
+import TopicService from '../../service/topicService'
 
 export default {
   namespaced: true,
@@ -12,14 +12,14 @@ export default {
     }
   },
   actions: {
-    getTopics ({ commit }, [that, path]) {
-      const url = config.topics[path.split('/')[2]].url
-      that.$http.get(url)
-        .then(res => {
-          let _data = res.body.data
-          commit('CHANGE_TOPICS', handleData(_data))
-        }, () => {
-          alert('请求出错')
+    getTopics ({ commit }, path) {
+      TopicService.getTopics(1, path.split('/')[2])
+        .then(topics => {
+          commit('CHANGE_TOPICS', handleData(topics))
+        })
+        .catch(err => {
+          alert('获取主题首页出错')
+          console.log(err)
         })
     }
   }
