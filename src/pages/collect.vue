@@ -28,7 +28,7 @@
     },
     methods: {
       ...mapActions({
-        getCollections: 'collect/getCollections'
+        getCollections: 'collect/getUserCollections'
       })
     },
     components: {

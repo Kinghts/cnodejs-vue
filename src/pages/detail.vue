@@ -71,6 +71,7 @@
       ...mapActions({
         getTopicContent: 'detail/getTopicContent',
         collect: 'detail/collectTopic',
+        decollect: 'detail/decollectTopic',
         submitTopicReply: 'detail/submitTopicReply',
         submitOtherReply: 'detail/submitOtherReply',
         submitReplyUps: 'detail/submitReplyUps',
@@ -85,23 +86,29 @@
         this.toEditMode(this.detail)
       },
       collectTopic () {
-        this.collect([this, this.detail.id, true])
+        this.collect([this.$store.state.loggedUser.accesstoken, this.detail.id])
           .then(res => {
             console.log('收藏成功')
-            this.getCollections([this.$store.state.loggedUser.loginname])
+            setTimeout(() => {
+              this.getCollections([this.$store.state.loggedUser.loginname])
+            }, 2000)
           })
           .catch(err => {
-            alert(err)
+            alert('收藏失败')
+            console.log(err)
           })
       },
       de_collectTopic () {
-        this.collect([this, this.detail.id, false])
+        this.decollect([this.$store.state.loggedUser.accesstoken, this.detail.id, false])
           .then(res => {
             console.log('取消收藏成功')
-            this.getCollections([this.$store.state.loggedUser.loginname])
+            setTimeout(() => {
+              this.getCollections([this.$store.state.loggedUser.loginname])
+            }, 2000)
           })
           .catch(err => {
-            alert(err)
+            alert('取消收藏失败')
+            console.log(err)
           })
       },
       updateTReplyContent (content) { // 从editor传来的更新

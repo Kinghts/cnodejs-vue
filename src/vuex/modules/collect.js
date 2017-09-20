@@ -1,6 +1,5 @@
-import VUE from 'vue'
-import config from '../../config.js'
 import { Topic } from '../../models/topic'
+import CollectService from '../../service/collectService'
 
 export default {
   namespaced: true,
@@ -13,16 +12,14 @@ export default {
     }
   },
   actions: {
-    getCollections ({ commit }, [loginname]) {
-      let url = config.apiBaseUrl + '/topic_collect/' + loginname
-      VUE.http.get(url)
-        .then(res => {
-          if (res.body.success) {
-            commit('CHANGE_COLLECTIONS', handleCollectData(res.body.data))
-          }
+    getUserCollections ({ commit }, loginname) {
+      CollectService.getUserCollections(loginname)
+        .then((collections) => {
+          commit('CHANGE_COLLECTIONS', handleCollectData(collections))
         })
         .catch(err => {
-          alert(err)
+          alert('获取用户收藏失败')
+          console.log(err)
         })
     }
   }

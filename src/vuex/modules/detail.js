@@ -1,6 +1,7 @@
 import VUE from 'vue'
 import config from '../../config'
 import TopicService from '../../service/topicService'
+import CollectService from '../../service/collectService'
 
 export default {
   namespaced: true,
@@ -116,29 +117,28 @@ export default {
         console.log(err)
       })
     },
-    collectTopic ({ commit }, [that, id, collect]) {
-      let url = config.apiBaseUrl + '/topic_collect/'
-      if (collect) {
-        url += 'collect'
-      } else {
-        url += 'de_collect'
-      }
-      return new Promise(function (resolve, reject) {
-        VUE.http.post(url, {
-          accesstoken: that.$store.state.loggedUser.accesstoken,
-          topic_id: id
-        })
-        .then(res => {
-          if (res.body.success) {
-            commit('UPDATE_COLLECT_STATUS', collect)
-            resolve(true)
-          } else {
-            reject('收藏/取消收藏失败')
-          }
-        })
-        .catch(err => {
-          reject(err)
-        })
+    collectTopic ({ commit }, [accesstoken, topicID]) {
+      return new Promise((resolve, reject) => {
+        CollectService.collectTopic([accesstoken, topicID])
+          .then(() => {
+            commit('UPDATE_COLLECT_STATUS', true)
+            resolve()
+          })
+          .catch((err) => {
+            reject(err)
+          })
+      })
+    },
+    decollectTopic ({ commit }, [accesstoken, topicID]) {
+      return new Promise((resolve, reject) => {
+        CollectService.decollectTopic([accesstoken, topicID])
+          .then(() => {
+            commit('UPDATE_COLLECT_STATUS', false)
+            resolve()
+          })
+          .catch((err) => {
+            reject(err)
+          })
       })
     }
   }
