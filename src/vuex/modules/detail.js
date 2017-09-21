@@ -1,7 +1,6 @@
-import VUE from 'vue'
-import config from '../../config'
 import TopicService from '../../service/topicService'
 import CollectService from '../../service/collectService'
+import ReplyService from '../../service/replyService'
 
 export default {
   namespaced: true,
@@ -43,6 +42,7 @@ export default {
           } else {
             reply.ups.pop() // 注意：这里并没有从数组中移除登录用户的id
           }
+          break
         }
       }
     }
@@ -72,50 +72,21 @@ export default {
     updateTopic ({ commit }, [accesstoken, topicID, title, tab, content]) {
       return TopicService.updateTopic([accesstoken, topicID, title, tab, content])
     },
-    submitTopicReply ({ commit }, [that, id, content]) {
-      let url = config.apiBaseUrl + '/topic/' + id + '/replies'
-      VUE.http.post(url, {
-        accesstoken: that.$store.state.loggedUser.accesstoken,
-        content: content
-      }).then((res) => {
-        if (res.body.success) {
-          that.getTopicContent([that, id]) // 回复成功，更新内容
-        }
-      }).catch((err) => {
-        console.log(err)
-      })
+    replyTopic ({ commit }, [accesstoken, topicID, content]) {
+      return ReplyService.replyTopic(accesstoken, topicID, content)
     },
-    submitOtherReply ({ commit }, [that, id, content, replyId]) {
-      let url = config.apiBaseUrl + '/topic/' + id + '/replies'
-      VUE.http.post(url, {
-        accesstoken: that.$store.state.loggedUser.accesstoken,
-        content: content,
-        reply_id: replyId
-      }).then((res) => {
-        if (res.body.success) {
-          that.getTopicContent([that, id])
-        }
-      }).catch((err) => {
-        console.log(err)
-      })
+    replyUser ({ commit }, [accesstoken, topicID, content, replyID]) {
+      return ReplyService.replyUser(accesstoken, topicID, content, replyID)
     },
-    submitReplyUps ({ commit }, [that, replyId]) { // 给评论点赞/取消点赞
-      let url = config.apiBaseUrl + '/reply/' + replyId + '/ups'
-      VUE.http.post(url, {
-        accesstoken: that.$store.state.loggedUser.accesstoken
-      }).then((res) => {
-        if (res.body.success) {
-          let up = false
-          if (res.body.action === 'up') {
-            up = true
-          }
-          commit('UPDATE_REPLY_UPS', [replyId, that.$store.state.loggedUser.id, up])
-        } else {
-          console.log(res.body.message)
-        }
-      }).catch((err) => {
-        console.log(err)
-      })
+    thumbsUp ({ commit }, [accesstoken, replyID, loggedUserID]) { // 给评论点赞/取消点赞
+      ReplyService.thumbsUp(accesstoken, replyID)
+        .then(action => {
+          commit('UPDATE_REPLY_UPS', [replyID, loggedUserID, action === 'up'])
+        })
+        .catch(err => {
+          alert('点赞失败')
+          console.log(err)
+        })
     },
     collectTopic ({ commit }, [accesstoken, topicID]) {
       return new Promise((resolve, reject) => {

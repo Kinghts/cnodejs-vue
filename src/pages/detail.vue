@@ -64,7 +64,8 @@
       ...mapState({
         detail: state => state.detail,
         is_collect: state => state.detail.is_collect,
-        user_id: state => state.loggedUser.id // 已登录用户的id
+        user_id: state => state.loggedUser.id, // 已登录用户的id
+        accesstoken: state => state.loggedUser.accesstoken
       })
     },
     methods: {
@@ -72,9 +73,9 @@
         getTopicContent: 'detail/getTopicContent',
         collect: 'detail/collectTopic',
         decollect: 'detail/decollectTopic',
-        submitTopicReply: 'detail/submitTopicReply',
-        submitOtherReply: 'detail/submitOtherReply',
-        submitReplyUps: 'detail/submitReplyUps',
+        replyTopic: 'detail/replyTopic',
+        replyUser: 'detail/replyUser',
+        thumbsUp: 'detail/thumbsUp',
         toEditMode: 'editor/toEditMode',
         getCollections: 'collect/getCollections',
         getUInfo: 'userInfo/getUserInfo'
@@ -115,7 +116,13 @@
         this.topicReply = content
       },
       submitTReply () {
-        this.submitTopicReply([this, this.detail.id, this.topicReply])
+        this.replyTopic([this.accesstoken, this.detail.id, this.topicReply])
+          .then(() => {
+            alert('回复成功，2秒后刷新页面')
+            setTimeout(() => {
+              this.getTopicContent([this.detail.id, this.accesstoken])
+            }, 2000)
+          })
       },
       changeReplyStatus (reply) {
         this.isReplyTopic = false
@@ -123,10 +130,16 @@
         this.repliedAuthor = '回复' + reply.author.loginname
       },
       submitOReply () { // 回复其他人的评论
-        this.submitOtherReply([this, this.detail.id, this.topicReply, this.repliedId])
+        this.replyUser([this.accesstoken, this.detail.id, this.topicReply, this.repliedId])
+          .then(() => {
+            alert('回复成功，2秒后刷新页面')
+            setTimeout(() => {
+              this.getTopicContent([this.detail.id, this.accesstoken])
+            }, 2000)
+          })
       },
       submitRUps (reply) { // 点赞评论
-        this.submitReplyUps([this, reply.id])
+        this.thumbsUp([this.accesstoken, reply.id, this.user_id])
       }
     },
     components: {
