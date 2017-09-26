@@ -1,7 +1,5 @@
 <template>
-  <div>
-    <div class="editor-content"></div>
-  </div>
+  <div class="editor-content"></div>
 </template>
 
 <script>
@@ -35,6 +33,7 @@
 
 <style scoped>
   .editor-content {
+    display: block;
     background-color: white;
   }
 </style>

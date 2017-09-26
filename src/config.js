@@ -104,11 +104,5 @@ export default {
   accesstokenCheckUrl: accesstokenCheckUrl,
   editorToolBarOptions: [
     ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
-    ['blockquote', 'code-block'],
-    [{ 'header': 1 }, { 'header': 2 }],               // custom button values
-    [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-    [{ 'size': ['small', false, 'large', 'huge'] }],  // custom dropdown
-    [{ 'font': [] }],
-    [{ 'align': [] }]
   ]
 }

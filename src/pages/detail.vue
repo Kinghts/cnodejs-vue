@@ -2,54 +2,70 @@
   主题详情页面
  */
 <template>
-  <div id="content">
-    <div class="panel">
-      <div class="header topic_header">
-        <span class="title">{{ detail.title }}</span>
-        <div class="changes">
-          <span>发布于{{ detail.create_at }}</span>
-          <router-link @click.native="getUserInfo" :to="{ name: '用户信息' }">作者{{ detail.author.loginname }}</router-link>
+  <div class="detail">
+    <topBar class="top-bar" styles="cnodejs">
+      <span @click="goBack" slot="left">返回</span>
+      <span slot="right">
+        <router-link @click.native="editTopic" :to="{ name: '编辑主题' }" v-if="detail.author_id === user_id">编辑</router-link>
+        <span v-if="is_collect" @click="de_collectTopic">取消收藏</span>
+        <span v-else-if="user_id" @click="collectTopic">收藏</span>
+      </span>
+    </topBar>
+    <div class="topic">
+      <div class="header topic-header">
+        <div class="userinfo">
+          <router-link @click.native="getUserInfo" :to="{ name: '用户信息' }">
+            <img class="avatar" :src="detail.author.avatar_url" alt="avatar">
+          </router-link>
+          <span class="otherinfo">
+            <span>{{ detail.author.loginname }}</span>
+            <br>
+            <span>{{ detail.create_at }}</span>
+          </span>
+        </div>
+      </div>
+      <div class="topic-content inner">
+        <div class="title">{{ detail.title }}</div>
+        <div class="accessinfo">
           <span>{{ detail.visit_count }}次浏览</span>
-          <span>来自{{ config.topics[detail.tab].name }}</span>
-          <br>
-          <router-link @click.native="editTopic" :to="{ name: '编辑主题' }" v-if="detail.author_id === user_id">编辑</router-link>
+          <span>{{ config.topics[detail.tab].name }}</span>
         </div>
-        <input v-if="is_collect" @click="de_collectTopic" class="btn-common collect-btn" value="取消收藏" type="button">
-        <input v-else @click="collectTopic" class="btn-success collect-btn" value="收藏" type="button">
-      </div>
-      <div class="inner">
-        <div v-html="detail.content" class="topic_content">
+        <div v-html="detail.content" class="content">
         </div>
       </div>
+        <a name="reply" id="reply"></a>
+        <div class="replies">
+          <reply-cell @reply="changeReplyStatus" @ups="submitRUps" :index="index" :reply="reply" v-for="(reply, index) in detail.replies" :key="reply.id"></reply-cell>
+        </div>
     </div>
-    <div class="panel">
-      <div class="header">
-        <span class="col_fade">{{ detail.reply_count }}回复</span>
-      </div>
-      <div class="replies">
-        <reply-cell @reply="changeReplyStatus" @ups="submitRUps" :index="index" :reply="reply" v-for="(reply, index) in detail.replies" :key="reply.id"></reply-cell>
-      </div>
-    </div>
-    <div class="panel">
-      <div class="header">
-        <span class="col_fade">添加回复</span>
-      </div>
-      <div class="edit-reply">
-        <editor @contentChange="updateTReplyContent"></editor>
+    <bottomBar class="bottom-bar" styles="cnodejs">
+      <span v-if="user_id" slot="left">
+        <span @click="open">写下你的评论</span>
+      </span>
+      <span slot="right">
+        <span @click="jumpToReply">评论{{detail.reply_count}}</span>
+      </span>
+    </bottomBar>
+    <popup class="popup-reply" position="bottom" :open="bottomPopup" @close="close">
+      <div class="editor-reply">
+        <textarea @input="updateTReplyContent" name="reply"></textarea>
       </div>
       <div class="editor-submit">
-        <input v-if="isReplyTopic" @click="submitTReply" class="btn-primary" value="回复" type="button">
-        <input v-else @click="submitOReply" class="btn-primary" :value="repliedAuthor" type="button">
+        <span v-if="isReplyTopic" @click="submitTReply">发表评论</span>
+        <span v-else @click="submitOReply" class="btn-primary">{{repliedAuthor}}</span>
       </div>
-    </div>
+    </popup>
   </div>
 </template>
 
 <script>
-  import { mapState, mapActions } from 'vuex'
   import config from '../config'
   import replyCell from '../components/replyCell'
   import Editor from '../components/editor'
+  import appBar from '../components/appBar'
+  import popup from '../components/popup'
+  import { mapState, mapActions } from 'vuex'
+
   export default {
     data () {
       return {
@@ -57,7 +73,8 @@
         'topicReply': '', // 回复内容
         'isReplyTopic': true, // 回复主题或者回复评论
         'repliedId': '', // 被回复的评论的id
-        'repliedAuthor': '' // 被回复的评论的作者
+        'repliedAuthor': '', // 被回复的评论的作者
+        bottomPopup: false
       }
     },
     computed: {
@@ -80,6 +97,22 @@
         getCollections: 'collect/getCollections',
         getUInfo: 'userInfo/getUserInfo'
       }),
+      goBack () {
+        this.$router.go(-1)
+      },
+      open () {
+        this.bottomPopup = true
+      },
+      close () {
+        this.bottomPopup = false
+      },
+      jumpToReply () {
+        let reply = document.querySelector('.replies')
+        let distance = reply.offsetTop - 50
+        document.body.scrollTop = distance // chrome
+        document.documentElement.scrollTop = distance // firefox
+        window.pageYOffset = distance // total
+      },
       getUserInfo () {
         this.getUInfo(this.detail.author.loginname)
       },
@@ -112,8 +145,8 @@
             console.log(err)
           })
       },
-      updateTReplyContent (content) { // 从editor传来的更新
-        this.topicReply = content
+      updateTReplyContent (e) { // 从textarea传来的更新
+        this.topicReply = e.target.value
       },
       submitTReply () {
         this.replyTopic([this.accesstoken, this.detail.id, this.topicReply])
@@ -143,51 +176,88 @@
       }
     },
     components: {
+      'topBar': appBar,
+      'bottomBar': appBar,
       'reply-cell': replyCell,
-      'editor': Editor
+      'editor': Editor,
+      'popup': popup
     }
   }
 </script>
 
-<style scoped>
-  #content {
-    margin: 0 5px;
-  }
-  .topic_header {
-    background-color: #fff;
-    border-bottom: 1px solid #eee;
-    text-align: left;
-  }
-  .topic_content {
-    padding: 10px 10px;
-    text-align: left;
-  }
-  .inner {
-    background-color: #fff;
-  }
-  .header {
-    text-align: left;
-  }
-  .title {
-    font-size: 22px;
-    font-weight: 700;
-    margin: 8px 0;
-    display: inline-block;
-    line-height: 130%;
-  }
-  .changes {
-    color: #838383;
-  }
-  .changes * {
-    font-size: 12px;
+<style lang="less" scoped>
+  .detail {
+    .top-bar {
+      position: fixed;
+      top: 0px;
+      z-index: 100;
+      color: #ccc;
+    }
+    .topic {
+      margin: 50px 0px 50px 0px;
+    }
+    .userinfo {
+      text-align: left;
+      vertical-align: middle;
+      .otherinfo {
+        vertical-align: middle;
+        display: inline-block;
+      }
+    }
+    .topic-content {
+      background-color: white;
+      padding-bottom: 20px;
+      .title {
+        font-size: 22px;
+        font-weight: 700;
+        margin: 8px 0;
+        display: inline-block;
+        line-height: 130%;
+        text-align: left;
+      }
+      .accessinfo {
+        text-align: left;
+      }
+      .content {
+        overflow: auto;
+        text-align: left;
+      }
+    }
+    .popup-reply {
+      width: 100%;
+      min-width: 400px;
+      .editor-reply {
+        background-color: white;
+        padding: 10px;
+        textarea {
+          width: 100%;
+          height: 100px;
+          border: 1px solid lightgray;
+          padding: 10px;
+          outline: none;
+          resize: none;
+        }
+      }
+      .editor-submit {
+        background-color: white;
+        padding: 0px 10px 10px 0px;
+        text-align: right;
+        span {
+          border-radius: 3px;
+          border: 1px solid #80bd01;
+          color: #80bd01;
+          padding: 5px 3px;
+        }
+      }
+    } 
+    .bottom-bar {
+      position: fixed;
+      bottom: 0px;
+      z-index: 100;
+      color: #ccc;
+    }
   }
   .changes span:before {
     content: '•'
-  }
-  .edit-reply div {
-    height: 200px;
-  }
-  .editor-submit {
-    margin-top: 50px;
   }
 </style>
