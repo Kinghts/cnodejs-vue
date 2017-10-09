@@ -58,7 +58,7 @@ export default {
         })
     },
     updateUserInfo ({ commit }, userinfo) {
-      commit('UPDATE_USERINFO', userinfo)
+      commit('UPDATE_USERINFO', [userinfo])
     }
   }
 }

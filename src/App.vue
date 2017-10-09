@@ -37,20 +37,7 @@ export default {
       updateUserInfo: 'loggedUser/updateUserInfo',
       showTransit: 'ui/showTransit',
       updateUserInfoPage: 'userInfo/replaceUserInfo'
-    }),
-    autoLogin () {
-      this.transitContent = '自动登陆中...'
-      this.showTransit(true)
-      this.login([UserService.getLoggedUserInfo().accesstoken])
-        .then(() => {
-          console.log('自动登录成功')
-          this.showTransit(false)
-        })
-        .catch((err) => {
-          alert(err)
-        })
-      console.log('login')
-    }
+    })
   },
   components: {
     'transit': Transition
