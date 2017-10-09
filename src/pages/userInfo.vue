@@ -41,8 +41,7 @@
     },
     methods: {
       ...mapActions({
-        userLogout: 'loggedUser/logout',
-        clearTopBarUserInfo: 'topBar/clearUserInfo'
+        userLogout: 'loggedUser/logout'
       }),
       logout () {
         this.userLogout([this.user.loginname, this])
