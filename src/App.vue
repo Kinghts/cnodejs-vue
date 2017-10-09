@@ -21,10 +21,7 @@ export default {
   },
   mounted () {
     if (UserService.isLogged()) { // 用户以前登陆过
-      /*
-      if (!this.$store.state.topBar.loginname) { // 用户当前并未登录
-        this.autoLogin()
-      } */
+      this.updateUserInfo(UserService.getLoggedUserInfo())
     }
     this.$router.push('/home')
   },
@@ -37,6 +34,7 @@ export default {
   methods: {
     ...mapActions({
       login: 'loggedUser/login',
+      updateUserInfo: 'loggedUser/updateUserInfo',
       showTransit: 'ui/showTransit',
       updateUserInfoPage: 'userInfo/replaceUserInfo'
     }),

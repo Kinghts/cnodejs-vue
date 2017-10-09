@@ -28,7 +28,7 @@ export default {
     }
   },
   actions: {
-    login ({ commit }, [accesstoken]) {
+    login ({ commit }, [accesstoken, that]) {
       return new Promise((resolve, reject) => {
         UserService.checkAccessToken(accesstoken)
           .then(data => {
@@ -38,6 +38,8 @@ export default {
           .then(data => {
             data.accesstoken = accesstoken
             commit('UPDATE_USERINFO', [data]) // 更新其他详细信息
+            UserService.clearLoggedUserInfo()
+            UserService.saveLoggedUserInfo(that.$store.state.loggedUser)
             resolve()
           })
           .catch(err => {
@@ -54,6 +56,9 @@ export default {
         .then(data => {
           commit('UPDATE_USERINFO', [data])
         })
+    },
+    updateUserInfo ({ commit }, userinfo) {
+      commit('UPDATE_USERINFO', userinfo)
     }
   }
 }

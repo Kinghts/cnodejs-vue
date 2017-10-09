@@ -29,7 +29,7 @@
       }),
       login: function () {
         if (this.accesstoken) {
-          this.aLogin([this.accesstoken])
+          this.aLogin([this.accesstoken, this])
             .then(() => {
               this.$router.push('home')
             })
