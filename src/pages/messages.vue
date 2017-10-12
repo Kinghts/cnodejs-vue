@@ -25,12 +25,16 @@
 
 <script>
   import { mapState } from 'vuex'
+  import appBar from '../components/appBar'
   export default {
     computed: {
       ...mapState({
         newMessages: state => state.messages.hasnot_read_messages,
         oldMessages: state => state.messages.has_read_messages
       })
+    },
+    components: {
+      'topBar': appBar
     }
   }
 </script>
