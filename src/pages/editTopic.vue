@@ -2,19 +2,24 @@
 发布主题和编辑主题都复用这个
  */
 <template>
-  <div class="block inner">
-    <div class="editor-selector align-left">
-      <span>选择板块：</span>
-      <select v-model="tab" name="tab-value" id="tab-select">
-        <option value="">请选择</option>
+  <div class="editor">
+    <topBar class="top-bar" styles="cnodejs">
+      <span @click="goBack" slot="left">返回</span>
+      <span @click="submitTopic" slot="right">发布</span>
+    </topBar>
+    <div class="topic">
+      <select v-model="tab" name="tab-value" id="editor-tab">
+        <option value="">请选择板块</option>
         <option :value="key" :key="key" v-for="(topic, key) in config.topics" v-if="topic.create">{{topic.name}}</option>
       </select>
+      <hr>
+      <textarea v-model="title" class="editor-title" name="title" placeholder="标题字数10字以上"></textarea>
+      <hr>
+      <textarea @input="updateContent" v-model="content" class="editor-content" name="content"></textarea>
     </div>
-    <textarea v-model="title" class="editor-title" name="title" id="title" rows="1" placeholder="标题字数10字以上"></textarea>
-    <editor :content="content" @contentChange="updateContent"></editor>
-    <div class="editor-submit">
-      <input @click="submitTopic" class="btn-primary" value="提交" type="button">
-    </div>
+    <bottomBar class="bottom-bar" styles="cnodejs">
+
+    </bottomBar>
   </div>
 </template>
 
@@ -22,6 +27,8 @@
   import config from '../config.js'
   import { mapState, mapActions } from 'vuex'
   import Editor from '../components/editor'
+  import appBar from '../components/appBar'
+  import TopicService from '../service/topicService'
   export default {
     data () {
       return {
@@ -35,7 +42,8 @@
     },
     computed: {
       ...mapState({
-        eTopic: state => state.editor
+        eTopic: state => state.editor,
+        accesstoken: state => state.loggedUser.accesstoken
       })
     },
     mounted () {
@@ -44,7 +52,15 @@
         this.id = this.eTopic.id
         this.tab = this.eTopic.tab
         this.title = this.eTopic.title
-        this.content = this.eTopic.content
+        // content使用未渲染的文本
+        TopicService.getTopicContent([this.id, this.accesstoken, false])
+          .then(topic => {
+            this.content = topic.content
+          })
+          .catch(err => {
+            alert('获取原始主题出错')
+            console.log(err)
+          })
         this.isNewTopic = false
       }
     },
@@ -59,8 +75,11 @@
         updateTopic: 'detail/updateTopic',
         updateTopicState: 'editor/updateTopic'
       }),
-      updateContent (content) {
-        this.updateTopicState({content})
+      goBack () {
+        this.$router.go(-1)
+      },
+      updateContent (e) {
+        this.updateTopicState({content: e.target.value})
       },
       submitTopic () {
         let accesstoken = this.$store.state.loggedUser.accesstoken
@@ -69,8 +88,9 @@
         } else {
           this.updateTopic([accesstoken, this.eTopic.id, this.eTopic.title, this.eTopic.tab, this.eTopic.content])
             .then(() => {
-              this.getTopicContent([this, this.eTopic.id])
-              this.$router.go(-1) // 跳转回上一级
+              // this.getTopicContent([this, this.eTopic.id])
+              // this.$router.go(-1) // 跳转回上一级
+              alert('发布主题成功')
             }).catch(err => {
               alert('保存主题失败')
               console.log(err)
@@ -79,32 +99,50 @@
       }
     },
     components: {
-      'editor': Editor
+      'editor': Editor,
+      'topBar': appBar,
+      'bottomBar': appBar
     }
   }
 </script>
 
-<style scoped>
-  #tab-select {
-    width: 220px;
-    border: 1px solid #ccc;
-    height: 30px;
-    line-height: 30px;
-    border-radius: 4px;
-  }
-  .editor-selector {
-    margin-bottom: 10px;
-  }
-  .editor-title {
-    width: 100%;
-    height: 30px;
-    line-height: 30px;
-    border-radius: 4px;
-    margin-bottom: 10px;
-    resize: none;
-  }
-  .editor-submit {
+<style lang="less" scoped>
+  .editor {
+    padding: 10px;
     text-align: left;
+    .top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 100;
+    }
+    .topic {
+      margin: 50px 0 50px 0;
+      #editor-tab {
+        width: 220px;
+        border: 1px solid #ccc;
+        height: 30px;
+        line-height: 30px;
+        border-radius: 4px;
+        background-color: inherit;
+      }
+      .editor-title, .editor-content {
+        width: 100%;
+        height: 30px;
+        vertical-align: middle;
+        border: none;
+        background-color: inherit;
+      }
+      .editor-content {
+        height: 400px;
+      }
+    }
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+    }
   }
 </style>
 
