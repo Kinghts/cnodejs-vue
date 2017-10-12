@@ -191,7 +191,6 @@
       position: fixed;
       top: 0px;
       z-index: 100;
-      color: #ccc;
     }
     .topic {
       margin: 50px 0px 50px 0px;
@@ -207,6 +206,7 @@
     .topic-content {
       background-color: white;
       padding-bottom: 20px;
+      text-align: left;
       .title {
         font-size: 22px;
         font-weight: 700;
@@ -234,8 +234,6 @@
           height: 100px;
           border: 1px solid lightgray;
           padding: 10px;
-          outline: none;
-          resize: none;
         }
       }
       .editor-submit {
