@@ -23,9 +23,7 @@ export default {
     if (accesstoken) {
       params.accesstoken = accesstoken
     }
-    if (render) {
-      params.render = render
-    }
+    params.mdrender = render
     return new Promise((resolve, reject) => {
       VUE.http.get(url, {
         params: params
