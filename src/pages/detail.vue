@@ -67,6 +67,11 @@
   import { mapState, mapActions } from 'vuex'
 
   export default {
+    mounted () {
+      if (this.$route.params.id) {
+        this.getTopicContent([this.$route.params.id, this.accesstoken])
+      }
+    },
     data () {
       return {
         'config': config,
