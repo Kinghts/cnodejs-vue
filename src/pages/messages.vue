@@ -1,7 +1,7 @@
 <template>
   <div id="messages">
     <topBar class="top-bar" styles="cnodejs">
-      <span slot="left">消息</span>
+      <span slot="center">消息</span>
     </topBar>
     <div class="new-message">
       <div class="header">
