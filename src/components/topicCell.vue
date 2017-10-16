@@ -13,8 +13,8 @@
       </router-link>
     </div>
     <div class="topic-bottom">
-      <span class="tab" :class="[{ hide: topic.hideTab, put_good: topic.good || topic.top }, 'put_normal']">{{ topic.tab }}</span>
-      <span class="topic-count">
+      <span v-if="topic.tab" class="tab" :class="[{ hide: topic.hideTab, put_good: topic.good || topic.top }, 'put_normal']">{{ topic.tab }}</span>
+      <span v-if="topic.visit_count" class="topic-count">
         <span>阅读{{ topic.visit_count }}</span>
         <span>评论{{ topic.reply_count }}</span>
       </span>
