@@ -10,7 +10,6 @@
       <div class="main-info">
         <img class="user-avatar" :src="user.avatar_url" alt="avatar">
         <span class="loginname">{{ user.loginname }}</span>
-        <span class="exit-btn" v-if="user.accesstoken" @click="logout">退出登录</span>
       </div>
       <div class="other-info">
         <span>积分 {{ user.score }}</span>
@@ -29,6 +28,7 @@
         <div>最近参与的话题</div>
         <cell v-for="topic in user.recent_replies" :topic="topic" :key="topic.id"></cell>
       </div>
+      <div class="exit-btn" v-if="user.accesstoken" @click="logout">退出登录</div>
     </div>
   </div>
 </template>
@@ -55,7 +55,6 @@
       }),
       logout () {
         this.userLogout([this.user.loginname, this])
-        this.clearTopBarUserInfo()
         this.$router.push('home/all')
       }
     },
@@ -75,6 +74,7 @@
     z-index: 100;
   }
   .user-info {
+    overflow: hidden; /*BFC*/
     margin: @app-bar-height 0 @app-bar-height 0;
     .main-info {
       background-color: white;
@@ -90,12 +90,21 @@
       }
       .loginname {
         font-size: 20px;
+        vertical-align: middle;
       }
     }
     .other-info {
       background-color: white;
       padding: 20px;
       text-align: left;
+    }
+    .exit-btn {
+      margin: 10px 10px 15px 10px;
+      font-size: 20px;
+      color: red;
+      border: 1px solid red;
+      border-radius: 3px;
+      background-color: white;
     }
   }
 </style>
