@@ -107,6 +107,7 @@
 </script>
 
 <style lang="less" scoped>
+  @import '../assets/common-var.less';
   .editor {
     padding: 10px;
     text-align: left;
@@ -114,10 +115,10 @@
       position: fixed;
       top: 0;
       left: 0;
-      z-index: 100;
+      z-index: @app-bar-z-index;
     }
     .topic {
-      margin: 50px 0 50px 0;
+      margin: @app-bar-height 0 @app-bar-height 0;
       #editor-tab {
         width: 220px;
         border: 1px solid #ccc;

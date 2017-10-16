@@ -59,16 +59,17 @@
 </script>
 
 <style scoped lang="less">
+  @import '../assets/common-var.less';
   .top-bar {
     position: fixed;
     top: 0px;
-    z-index: 100;
+    z-index: @app-bar-z-index;
     .logo {
       max-height: 80%;
     }
   }
   .content {
-    margin: 50px 0 50px 0;
+    margin: @app-bar-height 0 @app-bar-height 0;
   }
   .link {
     color: #ccc;

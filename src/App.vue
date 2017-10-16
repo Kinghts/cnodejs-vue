@@ -85,28 +85,30 @@ export default {
 </script>
   
 <style lang="less">
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-.topic-tab {
+  @import './assets/common-var.less';
+  @import './assets/common.less';
+  #app {
+    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-align: center;
+    color: #2c3e50;
+  }
+  .topic-tab {
     position: fixed;
     bottom: 50px;
-}
-.bottom-bar {
-  width: 100%;
-  position: fixed;
-  bottom: 0;
-}
-.link {
+  }
+  .bottom-bar {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    z-index: @app-bar-z-index;
+  }
+  .link {
     color: #ccc;
     text-decoration: none;
     text-align: center;
     line-height: inherit;
     margin: 0px 10px 0px 10px;
   }
-@import './assets/common.less';
 </style>

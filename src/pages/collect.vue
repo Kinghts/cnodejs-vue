@@ -44,14 +44,15 @@
 </script>
 
 <style lang="less" scoped>
+  @import '../assets/common-var.less';
   .top-bar {
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 100;
+    z-index: @app-bar-z-index;
   }
   .collections {
-    margin: 50px 0 50px 0;
+    margin: @app-bar-height 0 @app-bar-height 0;
   }
 </style>
 

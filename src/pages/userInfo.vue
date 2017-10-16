@@ -71,7 +71,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    z-index: 100;
+    z-index: @app-bar-z-index;
   }
   .user-info {
     overflow: hidden; /*BFC*/

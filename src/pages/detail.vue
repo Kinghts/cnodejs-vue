@@ -191,14 +191,15 @@
 </script>
 
 <style lang="less" scoped>
+  @import '../assets/common-var.less';
   .detail {
     .top-bar {
       position: fixed;
       top: 0px;
-      z-index: 100;
+      z-index: @app-bar-z-index;
     }
     .topic {
-      margin: 50px 0px 50px 0px;
+      margin: @app-bar-height 0 @app-bar-height 0;
     }
     .userinfo {
       text-align: left;
