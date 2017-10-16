@@ -38,8 +38,8 @@ Topic.createTopic = function (data) {
   }
   if (data.tab) {
     topic.tab = data.good ? config.topics.good.name : config.topics[data.tab].name
-  } else { // 上古帖子没有tab
-    topic.tab = config.topics.ask.name
+  } else {
+    topic.tab = ''
   }
   topic.hideTab = false
   // 处理最后回复时间
