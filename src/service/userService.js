@@ -2,6 +2,7 @@ import VUE from 'vue'
 import config from '../config'
 import { User } from '../models/user'
 import Store from 'store2'
+import { Topic } from '../models/topic'
 
 let localStore = Store.local.namespace('user')
 
@@ -30,7 +31,18 @@ export default {
       VUE.http.get(config.apiUserBaseUrl + '/' + loginname)
         .then(res => {
           if (res.body.success) {
-            resolve(res.body.data)
+            let _data = res.body.data
+            let recentReplies = []
+            _data.recent_replies.forEach(e => {
+              recentReplies.push(Topic.createTopic(e))
+            })
+            _data.recent_replies = recentReplies
+            let recentTopics = []
+            _data.recent_topics.forEach(e => {
+              recentTopics.push(Topic.createTopic(e))
+            })
+            _data.recent_topics = recentTopics
+            resolve(_data)
           } else {
             reject('获取用户信息失败')
           }
