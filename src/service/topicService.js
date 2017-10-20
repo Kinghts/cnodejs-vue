@@ -1,5 +1,6 @@
 import VUE from 'vue'
 import config from '../config'
+import { Reply } from '../models/reply'
 
 export default {
   getTopics (page, tab) {
@@ -29,7 +30,12 @@ export default {
         params: params
       })
       .then(res => {
-        resolve(res.body.data)
+        let _data = res.body.data
+        for (let i = 0; i < _data.replies.length; i++) {
+          _data.replies[i] = Reply.createReply(_data.replies[i])
+          console.log(i)
+        }
+        resolve(_data)
       })
       .catch(err => {
         reject(err)
