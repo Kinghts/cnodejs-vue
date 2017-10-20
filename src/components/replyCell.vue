@@ -2,17 +2,17 @@
   <div class="cell">
     <div class="author-content">
       <router-link @click.native="getUserInfo" :to="{ name: '用户信息' }">
-        <img class="avatar" :src="reply.author.avatar_url" alt="avatar">
+        <img class="avatar" :src="reply.avatar_url" alt="avatar">
       </router-link>
       <span class="user-info">
-        <router-link @click.native="getUserInfo" :to="{ name: '用户信息' }">{{reply.author.loginname}}</router-link>
+        <router-link @click.native="getUserInfo" :to="{ name: '用户信息' }">{{reply.author_name}}</router-link>
         <a :href="config.topicUrl + '#' + reply.id">
           {{ index + 1 }}楼•{{ reply.create_at }}
         </a>
       </span>
       <span class="user-action">
         <span @click="ups" class="thumbs-up" title="喜欢">赞</span>
-        <span class="up-count">{{ reply.ups.length }}</span>
+        <span class="up-count">{{ reply.upsCount }}</span>
         <span @click="replyOther" class="reply">回复</span>
       </span>
     </div>
@@ -36,7 +36,7 @@
         getUInfo: 'userInfo/getUserInfo'
       }),
       getUserInfo: function () {
-        this.getUInfo(this.reply.author.loginname)
+        this.getUInfo(this.reply.author_name)
       },
       replyOther () { // 回复其他评论
         this.$emit('reply', this.reply)
